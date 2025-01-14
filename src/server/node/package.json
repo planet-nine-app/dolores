@@ -1,0 +1,35 @@
+{
+  "name": "dolores-js",
+  "version": "0.0.1",
+  "description": "Dolores is an allyabase mini-service for uploading and serving short-form video",
+  "keywords": [
+    "allyabase",
+    "sessionless",
+    "dolores"
+  ],
+  "homepage": "https://github.com/planet-nine-app/dolores#readme",
+  "bugs": {
+    "url": "https://github.com/planet-nine-app/dolores/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/planet-nine-app/dolores.git"
+  },
+  "license": "GPL-3.0-or-later",
+  "author": "planetnineisaspaceship",
+  "type": "module",
+  "main": "dolores.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bdo-js": "^0.0.4",
+    "express": "^4.21.2",
+    "express-fileupload": "^1.5.1",
+    "express-session": "^1.18.1",
+    "fount-js": "^0.0.3",
+    "magic-gateway-js": "^0.0.2",
+    "memorystore": "^1.6.7",
+    "sessionless-node": "^0.11.0"
+  }
+}

@@ -73,7 +73,7 @@ Gotta keep it CRUDy on this one.
 </details>
 
 <details>
- <summary><code>PUT</code> <code><b>/user/:uuid/short-form/:title/video</b></code> <code>Puts an image for the product with the given title</code></summary>
+ <summary><code>PUT</code> <code><b>/user/:uuid/short-form/:title/video</b></code> <code>Puts a video with the given title</code></summary>
 
 ##### Headers
 
@@ -94,6 +94,29 @@ Gotta keep it CRUDy on this one.
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
 > | `200`         | `application/json`                | `USER`   |
+> | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
+
+##### Example cURL
+
+TODO
+
+</details>
+
+<details>
+ <summary><code>GET</code> <code><b>/user/:uuid/short-form/:title/video</b></code> <code>Gets the video with the given title</code></summary>
+
+##### Headers
+
+> | name         |  required     | data type               | description                                                           |
+> |--------------|-----------|-------------------------|-----------------------------------------------------------------------|
+> | x-pn-timestamp    |  true     | string                  | in a production system timestamps narrow window for replay attacks  |
+> | x-pn-signature    |  true     | string (signature)      | the signature from sessionless for the message  |
+
+##### Responses
+
+> | http code     | content-type                      | response                                                            |
+> |---------------|-----------------------------------|---------------------------------------------------------------------|
+> | `200`         | `application/json`                | `video`   |
 > | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
 
 ##### Example cURL
