@@ -18,8 +18,9 @@ pub struct Video {
     pub fileURI: String
 }
 
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Feed {
-    pub titles: Vec<Video>
+    pub videos: Vec<Video>
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]

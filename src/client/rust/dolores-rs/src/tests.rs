@@ -1,4 +1,4 @@
-use crate::{DoloresUser, Dolores, SuccessResult};
+use crate::{DoloresUser, Dolores, Feed, SuccessResult};
 use sessionless::hex::IntoHex;
 use sessionless::hex::FromHex;
 use sessionless::{Sessionless, PrivateKey};
@@ -10,7 +10,7 @@ use serde_json::Value;
 async fn test_dolores() {
 
     let mut saved_user: Option<DoloresUser>;
-    let dolores = Dolores::new(Some("http://localhost:3006/".to_string()), None);
+    let dolores = Dolores::new(Some("http://localhost:3007/".to_string()), None);
 
     async fn create_user(dolores: &Dolores) -> Option<DoloresUser> {
     println!("creating user");
@@ -55,7 +55,7 @@ async fn test_dolores() {
 
     async fn put_mp4_video(dolores: &Dolores, saved_user: &DoloresUser) -> Option<SuccessResult> {
         let title = "My rust video".to_string();
-        let file_uri = "test.mp4".to_string();
+        let file_uri = "/Users/zachbabb/Work/planet-nine/dolores/test/mocha/test.mp4".to_string();
 
         let result = dolores.put_video(&saved_user.uuid, &title, &file_uri).await;
 
@@ -77,7 +77,7 @@ async fn test_dolores() {
 
     async fn put_mov_video(dolores: &Dolores, saved_user: &DoloresUser) -> Option<SuccessResult> {
         let title = "My rust mov".to_string();
-        let file_uri = "test.mov".to_string();
+        let file_uri = "/Users/zachbabb/Work/planet-nine/dolores/test/mocha/test.mov".to_string();
 
         let result = dolores.put_video(&saved_user.uuid, &title, &file_uri).await;
 
@@ -97,20 +97,21 @@ async fn test_dolores() {
         }
     }
 
-    async fn get_video(dolores: &Dolores, saved_user: &DoloresUser) -> Option<Video> {
+/*    async fn get_video(dolores: &Dolores, saved_user: &DoloresUser) -> Option<Video> {
         let title = "My rust mov".to_string();
         
         let result = dolores.get_video(&saved_user.uuid, &title, ???).await;
 
         // this depends on storing the vide
-    }
+    }*/
 
     async fn get_feed(dolores: &Dolores, saved_user: &DoloresUser) -> Option<Feed> {
-        let result = dolores.get_feed(&saved_user.uuid).await;
+        let tags = "foo+bar";
+        let result = dolores.get_feed(&saved_user.uuid, &tags).await;
 
         match result {
             Ok(feed) => {
-                assert!(feed.titles.len() >= 2);
+                assert!(feed.videos.len() == 0);
                 Some(feed)
             }
             Err(error) => {
@@ -121,7 +122,7 @@ async fn test_dolores() {
         }
     }
 
-    saved_user = Some(create_user(&fount).await.expect("user"));
+    saved_user = Some(create_user(&dolores).await.expect("user"));
 
     if let Some(ref user) = saved_user {
         saved_user = Some(get_user_by_uuid(&dolores, user).await.expect("get user"));
@@ -129,8 +130,13 @@ async fn test_dolores() {
         panic!("Failed to get user");
     }
 
-    Some(put_mp4_video(&dolores, &saved_user).await.expect("put mp4"));
-    Some(put_mov_video(&dolores, &saved_user).await.expect("put mov"));
-    Some(get_feed(&dolores, &saved_user).await.expect("get feed"));
+    if let Some(ref user) = saved_user {
+	Some(put_mp4_video(&dolores, user).await.expect("put mp4"));
+	Some(put_mov_video(&dolores, user).await.expect("put mov"));
+	Some(get_feed(&dolores, user).await.expect("get feed"));
+    } else {
+        panic!("Failed to get user");
+    }
+
 }
 

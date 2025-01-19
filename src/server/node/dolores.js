@@ -141,7 +141,7 @@ app.put('/user/:uuid/short-form/:title/video', async (req, res) => {
   const video = req.files.video;
   const videoUUID = sessionless.generateUUID();
   await video.mv('./video/' + videoUUID);
-  await db.putVideoMeta(videoUUID, {tags: []});
+  await db.putVideoMeta(videoUUID, {timestamp, tags: []});
 
   foundUser.videos.push({
     title,
@@ -150,6 +150,7 @@ app.put('/user/:uuid/short-form/:title/video', async (req, res) => {
 
   await db.saveUser(foundUser);
   
+console.log('should send back success');
   res.send({success: true});
   } catch(err) {
 console.warn(err);
@@ -179,11 +180,20 @@ app.get('/user/:uuid/feed', async (req, res) => {
     const foundUser = await db.getUserByUUID(uuid);
 
     if(!signature || !sessionless.verifySignature(signature, message, foundUser.pubKey)) {
+console.log('auth failed');
       res.status(403);
       return res.send({error: 'auth error'});
     }
 
-    const videos = await db.getVideosForTags(tags);
+    let videos = [];
+
+    if(tags.length === 0) {
+      videos = (await db.getLatestVideos(50)) || [];
+    } else {
+      videos = (await db.getVideosForTags(tags)) || [];
+    }
+
+console.log('videos looks like', videos, {videos});
 
     res.send({videos});
   } catch(err) {

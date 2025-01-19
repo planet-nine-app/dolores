@@ -100,7 +100,7 @@ console.log('getting the video at: ', `${baseURL}user/${savedUser.uuid}/short-fo
 console.log(res.text);
 console.log('headers:', res.headers);
   savedUser['set-cookie'] = res.headers['set-cookie'];
-  savedUser.videos = {video1: res.headers['x-pn-video-uuid'];
+  savedUser.videos = {video1: res.headers['x-pn-video-uuid']};
 console.log('get video res', res);
   savedUser.videos.video1.length.should.equal(36);
 });
@@ -121,7 +121,7 @@ it('should add tags to video1', async () => {
     tags: ['foo', 'bar']
   };
 
-  const message = payload.timestamp + payload.uuid + paylod.videoUUID + payload.tags.join('');
+  const message = payload.timestamp + payload.uuid + payload.videoUUID + payload.tags.join('');
   
   payload.signature = await sessionless.sign(message);
 
@@ -137,7 +137,7 @@ it('should add tags to video2', async () => {
     tags: ['foo', 'bop']
   };
 
-  const message = payload.timestamp + payload.uuid + paylod.videoUUID + payload.tags.join('');
+  const message = payload.timestamp + payload.uuid + payload.videoUUID + payload.tags.join('');
   
   payload.signature = await sessionless.sign(message);
 
@@ -148,7 +148,7 @@ it('should add tags to video2', async () => {
 it('should get a feed', async () => {
   const timestamp = new Date().getTime() + '';
   const tags = ['foo'];
-  const message = timestam + savedUser.uuid + tags.join('');
+  const message = timestamp + savedUser.uuid + tags.join('');
 
   const signature = await sessionless.sign(message);
 

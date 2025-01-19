@@ -84,9 +84,9 @@ console.log('putting video', video);
 
     meta.tags.forEach(tag => {
       if(!tags[tag]) {
-        tags[tag] = [uuid];
+        tags[tag] = [{timestamp, uuid}];
       } else {
-        tags[tag].push(uuid);
+        tags[tag].push({timestamp, uuid});
       }
     });
 
@@ -106,7 +106,16 @@ console.log('putting video', video);
     const tagsString = await client.get('videoMetaTags') || '{}';
     const tags = JSON.parse(tagsString);
 
-    const videosToReturn = tagsToGet.flatMap(tag => tags[tag]);
+    const videosToReturn = tagsToGet.flatMap(tag => tags[tag]).filter($ => $);
+
+    return videosToReturn;
+  },
+
+  getLatestVideos: async (total) => {
+    const tagsString = await client.get('videoMetaTags') || '{}';
+    const tags = JSON.parse(tagsString);
+
+    const videosToReturn = tagsToGet.flatMap(tag => tags[tag]).filter($ => $).sort((a, b) => +a - +b);
 
     return videosToReturn;
   }
