@@ -84,9 +84,9 @@ console.log('putting video', video);
 
     meta.tags.forEach(tag => {
       if(!tags[tag]) {
-        tags[tag] = [{timestamp, uuid}];
+        tags[tag] = [{meta.timestamp, uuid}];
       } else {
-        tags[tag].push({timestamp, uuid});
+        tags[tag].push({meta.timestamp, uuid});
       }
     });
 

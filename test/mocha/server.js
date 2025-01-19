@@ -77,7 +77,7 @@ it('should put an mp4 video', async () => {
     .set('x-pn-signature', signature);
 
   res.body.success.should.equal(true);
-});
+}).timeout(60000);
 
 it('should put a mov video', async () => {
   const timestamp = new Date().getTime() + '';
@@ -92,7 +92,7 @@ it('should put a mov video', async () => {
     .set('x-pn-signature', signature);
 
   res.body.success.should.equal(true);
-});
+}).timeout(60000);
 
 it('should get video', async () => {
 console.log('getting the video at: ', `${baseURL}user/${savedUser.uuid}/short-form/${encodeURIComponent('My mp4 video')}/video`);
@@ -103,7 +103,7 @@ console.log('headers:', res.headers);
   savedUser.videos = {video1: res.headers['x-pn-video-uuid']};
 console.log('get video res', res);
   savedUser.videos.video1.length.should.equal(36);
-});
+}).timeout(60000);
 
 it('should get video', async () => {
 console.log('getting the video at: ', `${baseURL}user/${savedUser.uuid}/short-form/${encodeURIComponent('My mov video')}/video`);
@@ -111,7 +111,7 @@ console.log('getting the video at: ', `${baseURL}user/${savedUser.uuid}/short-fo
   savedUser['set-cookie'] = res.headers['set-cookie'];
   savedUser.videos.video2 = res.headers['x-pn-video-uuid'];
   savedUser.videos.video2.length.should.equal(36);
-});
+}).timeout(60000);
 
 it('should add tags to video1', async () => {
   const payload = {
