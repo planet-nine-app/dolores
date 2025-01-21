@@ -178,6 +178,7 @@ impl Dolores {
         let encoded_tags: String = encode(tags).to_string();
 
         let url = format!("{}user/{}/feed?timestamp={}&signature={}&tags={}", self.base_url, uuid, timestamp, signature, encoded_tags);
+dbg!(format!("{}", url));
         let res = self.get(&url).await?;
         let feed: Feed = res.json().await?;
 

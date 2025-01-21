@@ -155,3 +155,14 @@ it('should get a feed', async () => {
   const res = await get(`${baseURL}user/${savedUser.uuid}/feed?timestamp=${timestamp}&tags=${tags.join('+')}&signature=${signature}`);
   res.body.videos.length.should.equal(2);
 });
+
+it('should get a feed of latest', async () => {
+  const timestamp = new Date().getTime() + '';
+  const tags = [];
+  const message = timestamp + savedUser.uuid + tags.join('');
+
+  const signature = await sessionless.sign(message);
+
+  const res = await get(`${baseURL}user/${savedUser.uuid}/feed?timestamp=${timestamp}&tags=${tags.join('+')}&signature=${signature}`);
+  res.body.videos.length.should.equal(2);
+});

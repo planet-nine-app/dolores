@@ -173,7 +173,9 @@ app.get('/user/:uuid/feed', async (req, res) => {
   try {
     const uuid = req.params.uuid;
     const timestamp = req.query.timestamp;
+console.log('beofre split', req.query.tags);
     const tags = req.query.tags.split('+');
+console.log('after split', tags);
     const signature = req.query.signature;
     const message = timestamp + uuid + tags.join('');
 
@@ -187,7 +189,7 @@ console.log('auth failed');
 
     let videos = [];
 
-    if(tags.length === 0) {
+    if(tags.length === 0 || JSON.stringify(tags) === JSON.stringify([ '' ])) {
       videos = (await db.getLatestVideos(50)) || [];
     } else {
       videos = (await db.getVideosForTags(tags)) || [];

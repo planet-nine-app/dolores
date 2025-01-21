@@ -114,8 +114,16 @@ console.log('putting video', video);
   getLatestVideos: async (total) => {
     const tagsString = await client.get('videoMetaTags') || '{}';
     const tags = JSON.parse(tagsString);
+    const tagsArray = Object.keys(tags);
 
-    const videosToReturn = tagsToGet.flatMap(tag => tags[tag]).filter($ => $).sort((a, b) => +a - +b);
+    let metaArray = [];
+    tagsArray.forEach(tag => {
+      metaArray = [...metaArray, ...tags[tag]];
+    });
+
+    const uniqueVideos = new Set(metaArray.map(item => JSON.stringify(item)));
+
+    const videosToReturn = Array.from(uniqueVideos).sort((a, b) => +a.timestamp - +b.timestamp).map(JSON.parse);
 
     return videosToReturn;
   }
