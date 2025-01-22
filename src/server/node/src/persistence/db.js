@@ -63,7 +63,7 @@ console.log('putting video', video);
     
     const timestampsJSON = (await client.get(`videos:${uuid}`)) || '{}';
     const timestamps = JSON.parse(timestampsJSON);
-    timestamp[video.timestamp] = video;
+    timestamps[video.timestamp] = video;
     await client.set(`videos:${uuid}`, JSON.stringify(timestamps));
     return video;
   },

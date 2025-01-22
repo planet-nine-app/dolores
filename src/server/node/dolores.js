@@ -140,7 +140,7 @@ app.put('/user/:uuid/short-form/video', async (req, res) => {
   const video = req.files.video;
   const videoUUID = sessionless.generateUUID();
   await video.mv('./video/' + videoUUID);
-  await db.putVideoMeta(videoUUID, {timestamp, tags: []});
+  await db.putVideoMeta(videoUUID, {timestamp, tags: ['latest']});
 
   foundUser.videos.push({
     timestamp,
