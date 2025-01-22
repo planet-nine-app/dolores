@@ -34,6 +34,7 @@ const _delete = async function(path, body) {
 let savedUser = {};
 let keys = {};
 let keysToReturn = {};
+let feed = [];
 
 it('should register a user', async () => {
   keys = await sessionless.generateKeys((k) => { keysToReturn = k; }, () => {return keysToReturn;});
@@ -66,12 +67,11 @@ it('should get user with account id', async () => {
 
 it('should put an mp4 video', async () => {
   const timestamp = new Date().getTime() + '';
-  const title = 'My mp4 video';
 
-  const message = timestamp + savedUser.uuid + title;
+  const message = timestamp + savedUser.uuid;
   const signature = await sessionless.sign(message);
 
-  const res = await superAgent.put(`${baseURL}user/${savedUser.uuid}/short-form/${encodeURIComponent(title)}/video`)
+  const res = await superAgent.put(`${baseURL}user/${savedUser.uuid}/short-form/video`)
     .attach('video', join(__dirname, 'test.mp4'))
     .set('x-pn-timestamp', timestamp)
     .set('x-pn-signature', signature);
@@ -81,12 +81,11 @@ it('should put an mp4 video', async () => {
 
 it('should put a mov video', async () => {
   const timestamp = new Date().getTime() + '';
-  const title = 'My mov video';
 
-  const message = timestamp + savedUser.uuid + title;
+  const message = timestamp + savedUser.uuid;
   const signature = await sessionless.sign(message);
 
-  const res = await superAgent.put(`${baseURL}user/${savedUser.uuid}/short-form/${encodeURIComponent(title)}/video`)
+  const res = await superAgent.put(`${baseURL}user/${savedUser.uuid}/short-form/video`)
     .attach('video', join(__dirname, 'test.mov'))
     .set('x-pn-timestamp', timestamp)
     .set('x-pn-signature', signature);
@@ -94,9 +93,20 @@ it('should put a mov video', async () => {
   res.body.success.should.equal(true);
 }).timeout(60000);
 
+it('should get a feed of latest', async () => {
+  const timestamp = new Date().getTime() + '';
+  const tags = [];
+  const message = timestamp + savedUser.uuid + tags.join('');
+
+  const signature = await sessionless.sign(message);
+
+  const res = await get(`${baseURL}user/${savedUser.uuid}/feed?timestamp=${timestamp}&tags=${tags.join('+')}&signature=${signature}`);
+  feed = res.body.videos;
+  res.body.videos.length.should.equal(2);
+});
+
 it('should get video', async () => {
-console.log('getting the video at: ', `${baseURL}user/${savedUser.uuid}/short-form/${encodeURIComponent('My mp4 video')}/video`);
-  const res = await superAgent.get(`${baseURL}user/${savedUser.uuid}/short-form/${encodeURIComponent('My mp4 video')}/video`);
+  const res = await superAgent.get(`${baseURL}user/${savedUser.uuid}/short-form/video/${feed[0].uuid}`);
 console.log(res.text);
 console.log('headers:', res.headers);
   savedUser['set-cookie'] = res.headers['set-cookie'];
@@ -106,8 +116,7 @@ console.log('get video res', res);
 }).timeout(60000);
 
 it('should get video', async () => {
-console.log('getting the video at: ', `${baseURL}user/${savedUser.uuid}/short-form/${encodeURIComponent('My mov video')}/video`);
-  const res = await superAgent.get(`${baseURL}user/${savedUser.uuid}/short-form/${encodeURIComponent('My mov video')}/video`);
+  const res = await superAgent.get(`${baseURL}user/${savedUser.uuid}/short-form/video/${feed[1].uuid}`);
   savedUser['set-cookie'] = res.headers['set-cookie'];
   savedUser.videos.video2 = res.headers['x-pn-video-uuid'];
   savedUser.videos.video2.length.should.equal(36);
@@ -156,13 +165,4 @@ it('should get a feed', async () => {
   res.body.videos.length.should.equal(2);
 });
 
-it('should get a feed of latest', async () => {
-  const timestamp = new Date().getTime() + '';
-  const tags = [];
-  const message = timestamp + savedUser.uuid + tags.join('');
 
-  const signature = await sessionless.sign(message);
-
-  const res = await get(`${baseURL}user/${savedUser.uuid}/feed?timestamp=${timestamp}&tags=${tags.join('+')}&signature=${signature}`);
-  res.body.videos.length.should.equal(2);
-});

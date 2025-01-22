@@ -12,10 +12,8 @@ pub struct VideoUpload {
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Video {
-    pub author: String,
-    pub title: String,
-    pub tags: Vec<String>,
-    pub fileURI: String
+    pub timestamp: String,
+    pub uuid: String
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]

@@ -119,13 +119,12 @@ console.warn(err);
   }
 });
 
-app.put('/user/:uuid/short-form/:title/video', async (req, res) => {
+app.put('/user/:uuid/short-form/video', async (req, res) => {
   try {
   const uuid = req.params.uuid;
-  const title = req.params.title;
   const timestamp = req.headers['x-pn-timestamp'];
   const signature = req.headers['x-pn-signature'];
-  const message = timestamp + uuid + title;
+  const message = timestamp + uuid;
 
   const foundUser = await db.getUserByUUID(uuid);
 
@@ -144,7 +143,7 @@ app.put('/user/:uuid/short-form/:title/video', async (req, res) => {
   await db.putVideoMeta(videoUUID, {timestamp, tags: []});
 
   foundUser.videos.push({
-    title,
+    timestamp,
     videoUUID 
   });
 
@@ -236,7 +235,7 @@ console.warn(err);
   }
 });
 
-app.get('/user/:uuid/short-form/:title/video', async (req, res) => {
+app.get('/user/:uuid/short-form/video/:videoUUID', async (req, res) => {
   try {
     const foundUser = await db.getUserByUUID(req.params.uuid);
 
@@ -258,8 +257,7 @@ console.log('session', req.session);
     }
 
 console.log('foundUser\'s videos look like: ', foundUser.videos);
-    const videoMeta = foundUser.videos.filter($ => $.title === req.params.title).pop();
-    const videoUUID = videoMeta.videoUUID;
+    const videoUUID = req.params.videoUUID;
     
     if(!videoUUID) {
       throw new Error('not found');

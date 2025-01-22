@@ -59,17 +59,17 @@ console.log('throwing');
 console.log('putting video', video);
     const uuid = user.uuid;
     video.uuid = uuid;
-    await client.set(`${user.uuid}:video:${video.title}`, JSON.stringify(video));
+    await client.set(`${user.uuid}:video:${video.timestamp}`, JSON.stringify(video));
     
-    const titlesJSON = (await client.get(`videos:${uuid}`)) || '{}';
-    const titles = JSON.parse(titlesJSON);
-    titles[video.title] = video;
-    await client.set(`videos:${uuid}`, JSON.stringify(titles));
+    const timestampsJSON = (await client.get(`videos:${uuid}`)) || '{}';
+    const timestamps = JSON.parse(timestampsJSON);
+    timestamp[video.timestamp] = video;
+    await client.set(`videos:${uuid}`, JSON.stringify(timestamps));
     return video;
   },
 
-  getVideo: async (uuid, title) => {
-    const video = await client.get(`${uuid}:video:${title}`);
+  getVideo: async (uuid, timestamp) => {
+    const video = await client.get(`${uuid}:video:${timestamp}`);
     if(!video) {
       throw new Error('not found');
     }
