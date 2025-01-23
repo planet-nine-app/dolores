@@ -5,6 +5,7 @@ import session from 'express-session';
 import store from 'memorystore';
 import { createHash } from 'node:crypto';
 import db from './src/persistence/db.js';
+import bsky from './src/protocols/at-protocol/bluesky.js';
 import fount from 'fount-js';
 import bdo from 'bdo-js';
 import sessionless from 'sessionless-node';
