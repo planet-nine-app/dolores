@@ -12,9 +12,7 @@ import bdo from 'bdo-js';
 import sessionless from 'sessionless-node';
 import gateway from 'magic-gateway-js';
 
-if (!fs.existsSync('./video')){
-    fs.mkdirSync('./video');
-}
+
 
 const MemoryStore = store(session);
 

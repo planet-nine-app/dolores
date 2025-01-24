@@ -2,6 +2,10 @@ import fs from 'fs';
 import { BskyAgent } from '@atproto/api';
 import db from '../../persistence/db.js';
 
+if(!fs.existsSync('./video')) {
+  fs.mkdirSync('./video');
+}
+
 let agent;
 
 try {
