@@ -12,8 +12,6 @@ import bdo from 'bdo-js';
 import sessionless from 'sessionless-node';
 import gateway from 'magic-gateway-js';
 
-
-
 const MemoryStore = store(session);
 
 const allowedTimeDifference = process.env.ALLOWED_TIME_DIFFERENCE || 300000; // keep this relaxed for now
