@@ -270,14 +270,14 @@ console.log('foundUser\'s videos look like: ', foundUser.videos);
     const fileSize = stat.size;
 
     if(stat.size < 500) {
-      res.writeHead(200, {
+/*      res.writeHead(200, {
         'Content-Type': 'video/mp4',
         'x-pn-video-uuid': videoUUID
-      });
+      });*/
       const vidURI = fs.readFileSync(videoPath);
-      const resp = await fetch(vidURI);
-      Readable.fromWeb(resp.body).pipe(res);
-      return;
+      /*const resp = await fetch(vidURI);
+      Readable.fromWeb(resp.body).pipe(res);*/
+      return res.redirect(301, vidURI);
     }
 
     const head = {
