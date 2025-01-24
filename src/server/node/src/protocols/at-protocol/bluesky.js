@@ -1,4 +1,6 @@
-import { BskyAgent } from "@atproto/api";
+import fs from 'fs';
+import { BskyAgent } from '@atproto/api';
+import db from '../../persistence/db.js';
 
 let agent;
 
@@ -33,10 +35,28 @@ const response = await agent.app.bsky.feed.getFeed({
   feed: 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/thevids',
   limit: 100
 });
-console.log(response);
-console.log(response.data.feed);
-console.log(response.data.feed[0].post.embed);
-response.data.feed.map($ => console.log($.post.embed['$type']));
+//console.log(response);
+//console.log(response.data.feed);
+//console.log(response.data.feed[0].post.embed);
+console.log('response posts count', response.data.feed.length);
+for(var i = 0; i < response.data.feed.length; i++) {
+  const post = response.data.feed[i].post;
+  const videoUUID = post.cid;
+  const timestamp = new Date(post.indexedAt).getTime() + '';
+  fs.writeFileSync('./video/' + videoUUID, post.embed.playlist);
+console.log('about to write ' + videoUUID + ' to the db');
+  await db.putVideoMeta(videoUUID, {timestamp, tags: ['latest']});
+console.log('should have written videoUUID');
+}
+/*response.data.feed.forEach(async $ => {
+  const post = $.post;
+  const videoUUID = post.cid;
+  const timestamp = new Date(post.indexedAt).getTime() + '';
+  fs.writeFileSync('./video/' + videoUUID, post.embed.playlist);
+console.log('about to write ' + videoUUID + ' to the db');
+  await db.putVideoMeta(videoUUID, {timestamp, tags: ['latest']});
+});*/
+
 } catch(err) {
 console.warn('no feed on feed');
 console.warn(err);

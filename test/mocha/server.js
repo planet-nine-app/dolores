@@ -102,11 +102,22 @@ it('should get a feed of latest', async () => {
 
   const res = await get(`${baseURL}user/${savedUser.uuid}/feed?timestamp=${timestamp}&tags=${tags.join('+')}&signature=${signature}`);
   feed = res.body.videos;
+console.log('feed', feed);
   res.body.videos.length.should.equal(2);
 });
 
+it('should get atproto video', async () => {
+  const videoMeta = feed.filter($ => $.uuid.length === 59)[0];
+  const res = await superAgent.get(`${baseURL}user/${savedUser.uuid}/short-form/video/${videoMeta.uuid}`);
+  savedUser['set-cookie'] = res.headers['set-cookie'];
+  const videoUUID = res.headers['x-pn-video-uuid'];
+  videoUUID.length.should.equal(59);
+});
+
 it('should get video', async () => {
-  const res = await superAgent.get(`${baseURL}user/${savedUser.uuid}/short-form/video/${feed[0].uuid}`);
+  const videoMeta = feed.filter($ => $.uuid.length === 36)[0];
+console.log('getting ' + `${baseURL}user/${savedUser.uuid}/short-form/video/${videoMeta.uuid}`);
+  const res = await superAgent.get(`${baseURL}user/${savedUser.uuid}/short-form/video/${videoMeta.uuid}`);
 console.log(res.text);
 console.log('headers:', res.headers);
   savedUser['set-cookie'] = res.headers['set-cookie'];
@@ -116,7 +127,8 @@ console.log('get video res', res);
 }).timeout(60000);
 
 it('should get video', async () => {
-  const res = await superAgent.get(`${baseURL}user/${savedUser.uuid}/short-form/video/${feed[1].uuid}`);
+  const videoMeta = feed.filter($ => $.uuid.length === 36)[1];
+  const res = await superAgent.get(`${baseURL}user/${savedUser.uuid}/short-form/video/${videoMeta.uuid}`);
   savedUser['set-cookie'] = res.headers['set-cookie'];
   savedUser.videos.video2 = res.headers['x-pn-video-uuid'];
   savedUser.videos.video2.length.should.equal(36);

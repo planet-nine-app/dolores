@@ -112,6 +112,7 @@ console.log('putting video', video);
   },
 
   getLatestVideos: async (total) => {
+console.log('getting latest videos');
     const tagsString = await client.get('videoMetaTags') || '{}';
     const tags = JSON.parse(tagsString);
     const tagsArray = Object.keys(tags);
@@ -121,9 +122,12 @@ console.log('putting video', video);
       metaArray = [...metaArray, ...tags[tag]];
     });
 
+console.log('metaArray', metaArray);
+metaArray.map(console.log);
+
     const uniqueVideos = new Set(metaArray.map(item => JSON.stringify(item)));
 
-    const videosToReturn = Array.from(uniqueVideos).sort((a, b) => +a.timestamp - +b.timestamp).map(JSON.parse);
+    const videosToReturn = Array.from(uniqueVideos).map(JSON.parse).sort((a, b) => +a.timestamp - +b.timestamp);
 
     return videosToReturn;
   }

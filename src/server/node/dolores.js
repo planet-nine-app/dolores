@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { Readable } from 'stream';
 import express from 'express';
 import fileUpload from 'express-fileupload';
 import session from 'express-session';
@@ -225,7 +226,7 @@ app.put('/user/:uuid/video/:videoUUID/tags', async (req, res) => {
     }
 
     const videoMeta = await db.getVideoMeta(videoUUID);
-    videoMeta.tags = [...videoMeta.tags, ...tags];
+    videoMeta.tags = [...videoMeta.tags, ...(tags || [])];
     await db.putVideoMeta(videoUUID, videoMeta);
 
     res.send({success: true});
@@ -267,6 +268,14 @@ console.log('foundUser\'s videos look like: ', foundUser.videos);
     const videoPath = './video/' + videoUUID;
     const stat = fs.statSync(videoPath);
     const fileSize = stat.size;
+
+    if(stat.size < 500) {
+      res.writeHead(200, {'x-pn-video-uuid': videoUUID});
+      const vidURI = fs.readFileSync(videoPath);
+      const resp = await fetch(vidURI);
+      Readable.fromWeb(resp.body).pipe(res);
+      return;
+    }
 
     const head = {
       'Content-Length': fileSize,
