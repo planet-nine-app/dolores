@@ -30,6 +30,7 @@ try {
 
   for(var i = 0; i < response.data.feed.length; i++) {
     const post = response.data.feed[i].post;
+console.log(post);
     const videoUUID = post.cid;
     const timestamp = new Date(post.indexedAt).getTime() + '';
     fs.writeFileSync('./video/' + videoUUID, post.embed.playlist);

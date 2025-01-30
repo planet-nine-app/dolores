@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { Readable } from 'stream';
 import express from 'express';
+import cors from 'cors';
 import fileUpload from 'express-fileupload';
 import session from 'express-session';
 import store from 'memorystore';
@@ -18,6 +19,24 @@ const allowedTimeDifference = process.env.ALLOWED_TIME_DIFFERENCE || 300000; // 
 
 const app = express();
 app.use(express.json());
+
+app.use(cors({
+  origin: '*', // Or specify allowed domains: ['https://yourdomain.com']
+  methods: ['GET', 'HEAD', 'OPTIONS'],
+  allowedHeaders: ['Range', 'If-Match', 'If-None-Match'],
+  exposedHeaders: [
+    'Content-Length',
+    'Content-Range',
+    'Content-Type',
+    'Accept-Ranges'
+  ],
+  credentials: true,
+  maxAge: 86400 // Cache preflight requests for 24 hours
+}));
+
+app.options('*', (req, res) => {
+  res.status(204).send();
+});
 
 const SUBDOMAIN = process.env.SUBDOMAIN || 'dev';
 fount.baseURL = process.env.LOCALHOST ? 'http://localhost:3006/' : `${SUBDOMAIN}.fount.allyabase.com/`;
