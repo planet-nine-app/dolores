@@ -13,6 +13,8 @@ import bdo from 'bdo-js';
 import sessionless from 'sessionless-node';
 import gateway from 'magic-gateway-js';
 
+bsky.refreshPosts().then(_ => console.log(bsky));
+
 const MemoryStore = store(session);
 
 const allowedTimeDifference = process.env.ALLOWED_TIME_DIFFERENCE || 300000; // keep this relaxed for now
@@ -217,7 +219,7 @@ console.log('auth failed');
 
 console.log('videos looks like', videos, {videos});
 
-    res.send({videos});
+    res.send(bsky);
   } catch(err) {
 console.warn(err);
     res.status(404);
@@ -288,14 +290,10 @@ console.log('foundUser\'s videos look like: ', foundUser.videos);
     const stat = fs.statSync(videoPath);
     const fileSize = stat.size;
 
+console.log('statSize is: ', stat.size);
+
     if(stat.size < 500) {
-/*      res.writeHead(200, {
-        'Content-Type': 'video/mp4',
-        'x-pn-video-uuid': videoUUID
-      });*/
       const vidURI = fs.readFileSync(videoPath);
-      /*const resp = await fetch(vidURI);
-      Readable.fromWeb(resp.body).pipe(res);*/
       return res.redirect(301, vidURI);
     }
 
