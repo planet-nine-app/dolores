@@ -50,9 +50,9 @@ const bsky = {
       const picResponses = await Promise.all(picPromises);
       const genericResponses = await Promise.all(genericPromises);
 
-console.log('videoResponses', videoResponses);
-console.log('picResponses', picResponses);
-console.log('genericResponses', genericResponses);
+console.log('videoResponses', videoResponses.flatMap($ => $.data.feed));
+console.log('picResponses', picResponses.flatMap($ => $.data.feed));
+console.log('genericResponses', genericResponses.flatMap($ => $.data.feed).map($ => console.log(JSON.stringify($.post))));
 
       videoResponses.forEach(async response => {
 	for(var i = 0; i < response.data.feed.length; i++) {

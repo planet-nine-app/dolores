@@ -108,7 +108,7 @@ console.log('putting video', video);
 
     const videosToReturn = tagsToGet.flatMap(tag => tags[tag]).filter($ => $);
 
-    return videosToReturn;
+    return videosToReturn || [];
   },
 
   getLatestVideos: async (total) => {
