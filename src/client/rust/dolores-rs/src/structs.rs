@@ -18,7 +18,10 @@ pub struct Video {
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Feed {
-    pub videos: Vec<Video>
+    pub videoPosts: Vec<Value>,
+    pub picPosts: Vec<Value>,
+    pub genericPosts: Vec<Value>,
+    pub allPosts: Vec<Value>
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
