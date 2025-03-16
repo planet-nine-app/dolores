@@ -181,6 +181,7 @@ impl Dolores {
 dbg!(format!("{}", url));
         let res = self.get(&url).await?;
         let feed: Feed = res.json().await?;
+dbg!(&feed);
 
         Ok(feed)
     }

@@ -2,6 +2,18 @@ import fs from 'fs';
 import { BskyAgent } from '@atproto/api';
 import db from '../../persistence/db.js';
 
+const nullify = (post) => {
+  const images = post.embed && post.embed.images;
+  const url = post.embed && post.embed.playlist;
+
+  return {
+    uuid: post.cid,
+    description: post.record && post.record.text,
+    images,
+    url
+  };
+};
+
 const bsky = {
   videoPosts: [],
   picPosts: [],
@@ -50,36 +62,33 @@ const bsky = {
       const picResponses = await Promise.all(picPromises);
       const genericResponses = await Promise.all(genericPromises);
 
-console.log('videoResponses', videoResponses.flatMap($ => $.data.feed));
-console.log('picResponses', picResponses.flatMap($ => $.data.feed));
-console.log('genericResponses', genericResponses.flatMap($ => $.data.feed).map($ => console.log(JSON.stringify($.post))));
-
       videoResponses.forEach(async response => {
 	for(var i = 0; i < response.data.feed.length; i++) {
 	  const post = response.data.feed[i];
           if(!post.post || !post.post.embed || !post.post.embed.playlist) {
             continue;
           }
-	  const videoUUID = post.post.cid;
-	  const timestamp = new Date(post.post.indexedAt).getTime() + '';
 
-	  fs.writeFileSync('./video/' + videoUUID, post.post.embed.playlist);
-	  await db.putVideoMeta(videoUUID, {timestamp, tags: ['latest']});
-          post.post.uuid = post.post.cid;
+          const remapped = nullify(post.post);
 
-          bsky.videoPosts.push(post);
-          bsky.allPosts.push(post);
+          bsky.videoPosts.push(remapped);
+          bsky.allPosts.push(remapped);
 	}
       });
 
       picResponses.forEach(response => response.data.feed.forEach(post => {
-        bsky.picPosts.push(post);
-        bsky.allPosts.push(post);
+        const remapped = nullify(post.post);
+        bsky.picPosts.push(remapped);
+        bsky.allPosts.push(remapped);
       }));
+
       genericResponses.forEach(response => response.data.feed.forEach(post => {
-        bsky.genericPosts.push(post);
-        bsky.allPosts.push(post);
+        const remapped = nullify(post.post);
+        bsky.genericPosts.push(remapped);
+        bsky.allPosts.push(remapped);
       }));
+
+console.log('after nullifying', bsky);
 
     } catch(err) {
     console.warn('no feed on feed');

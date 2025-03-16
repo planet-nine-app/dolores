@@ -8,6 +8,8 @@ import superAgent from 'superagent';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+console.log(process.env);
+
 const baseURL = process.env.SUB_DOMAIN ? `https://${process.env.SUB_DOMAIN}.dolores.allyabase.com/` : 'http://127.0.0.1:3007/';
 
 const get = async function(path) {
