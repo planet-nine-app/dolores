@@ -45,7 +45,7 @@ const bsky = {
     videoFeeds.push(VIDEO_FEED_URI);
 
     const picFeeds = [];
-    const CAT_PICS_URI = 'at://did:plc:q6gjnaw2blty4crticxkmujt/app.bsky.feed.generator/cv:cat';
+    const CAT_PICS_URI = 'at://did:plc:ss74gre7gpgnvgvzf5zfcsks/app.bsky.feed.generator/aaaas563rbb5q';
     picFeeds.push(CAT_PICS_URI);
 
     const genericFeeds = [];

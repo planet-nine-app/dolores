@@ -1,8 +1,9 @@
 {
-  "dogs": "at://did:plc:plqr56q7y23it22h6txnhavh/app.bsky.feed.generator/aaaae2kpch3jg",
+  "dogs": "at://did:plc:lcn5zsz2e7kjwoe4ldf3chr5/app.bsky.feed.generator/aaangplovi6dw",
   "film": "at://did:plc:2hwwem55ce6djnk6bn62cstr/app.bsky.feed.generator/aaaotdzmoni2q",
   "art": "at://did:plc:odqmsar3ikz5ubokya4sempk/app.bsky.feed.generator/aaabfn4o34jdi",
   "music": "at://did:plc:stu4unkwieyt5suhyfl6u5e4/app.bsky.feed.generator/aaacjvrirvq2w",
   "food": "at://did:plc:nmm26ltnxjx4oskwzdue4xvq/app.bsky.feed.generator/aaacoviie4ygo",
-  "birds": "at://did:plc:ffkgesg3jsv2j7aagkzrtcvt/app.bsky.feed.generator/aaagllxbcbsje"  
+  "birds": "at://did:plc:ffkgesg3jsv2j7aagkzrtcvt/app.bsky.feed.generator/aaagllxbcbsje",  
+  "cats": "at://did:plc:ss74gre7gpgnvgvzf5zfcsks/app.bsky.feed.generator/aaaas563rbb5q"
 }
