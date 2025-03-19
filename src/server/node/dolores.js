@@ -219,6 +219,10 @@ console.log('auth failed');
 
 console.log('videos looks like', videos, {videos});
 
+    if(+timestamp - bsky.lastRefresh > (10 * 60 * 1000)) {
+      bsky.refreshPosts();
+    }
+
     res.send(bsky);
   } catch(err) {
 console.warn(err);

@@ -19,6 +19,7 @@ const bsky = {
   picPosts: [],
   genericPosts: [],
   allPosts: [],
+  lastRefresh: new Date().getTime(),
 
   refreshPosts: async () => {
     if(!fs.existsSync('./video')) {
@@ -54,9 +55,9 @@ const bsky = {
     genericFeeds.push(BOOKS_URI);
 
     try {
-      const videoPromises = videoFeeds.map($ => agent.app.bsky.feed.getFeed({feed: $, limit: 2}));
-      const picPromises = picFeeds.map($ => agent.app.bsky.feed.getFeed({feed: $, limit: 2}));
-      const genericPromises = genericFeeds.map($ => agent.app.bsky.feed.getFeed({feed: $, limit: 2}));
+      const videoPromises = videoFeeds.map($ => agent.app.bsky.feed.getFeed({feed: $, limit: 30}));
+      const picPromises = picFeeds.map($ => agent.app.bsky.feed.getFeed({feed: $, limit: 30}));
+      const genericPromises = genericFeeds.map($ => agent.app.bsky.feed.getFeed({feed: $, limit: 30}));
 
       const videoResponses = await Promise.all(videoPromises);
       const picResponses = await Promise.all(picPromises);
@@ -88,6 +89,7 @@ const bsky = {
         bsky.allPosts.push(remapped);
       }));
 
+      bsky.lastRefresh = new Date().getTime();
 console.log('after nullifying', bsky);
 
     } catch(err) {
