@@ -2,6 +2,8 @@ import fs from 'fs';
 import { BskyAgent } from '@atproto/api';
 import db from '../../persistence/db.js';
 
+const MAX_POSTS = 500;
+
 const nullify = (post) => {
   const images = post.embed && post.embed.images;
   const url = post.embed && post.embed.playlist;
@@ -63,6 +65,8 @@ const bsky = {
       const picResponses = await Promise.all(picPromises);
       const genericResponses = await Promise.all(genericPromises);
 
+      const noop = () => {};
+
       videoResponses.forEach(async response => {
 	for(var i = 0; i < response.data.feed.length; i++) {
 	  const post = response.data.feed[i];
@@ -74,6 +78,10 @@ const bsky = {
 
           bsky.videoPosts.push(remapped);
           bsky.allPosts.push(remapped);
+   
+
+          bsky.videoPosts.length > MAX_POSTS ? bsky.videoPosts.shift() : noop();
+          bsky.allPosts.length > MAX_POSTS ? bsky.allPosts.shift() : noop();
 	}
       });
 
@@ -81,12 +89,18 @@ const bsky = {
         const remapped = nullify(post.post);
         bsky.picPosts.push(remapped);
         bsky.allPosts.push(remapped);
+
+        bsky.picPosts.length > MAX_POSTS ? bsky.picPosts.shift() : noop();
+        bsky.allPosts.length > MAX_POSTS ? bsky.allPosts.shift() : noop();
       }));
 
       genericResponses.forEach(response => response.data.feed.forEach(post => {
         const remapped = nullify(post.post);
         bsky.genericPosts.push(remapped);
         bsky.allPosts.push(remapped);
+
+        bsky.genericPosts.length > MAX_POSTS ? bsky.genericPosts.shift() : noop();
+        bsky.allPosts.length > MAX_POSTS ? bsky.allPosts.shift() : noop();
       }));
 
       bsky.lastRefresh = new Date().getTime();
