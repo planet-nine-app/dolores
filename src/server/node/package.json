@@ -24,14 +24,14 @@
   },
   "dependencies": {
     "@atproto/api": "^0.13.31",
-    "bdo-js": "^0.0.4",
+    "bdo-js": "latest",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "express-fileupload": "^1.5.1",
     "express-session": "^1.18.1",
-    "fount-js": "^0.0.3",
-    "magic-gateway-js": "^0.0.2",
+    "fount-js": "latest",
+    "magic-gateway-js": "latest",
     "memorystore": "^1.6.7",
-    "sessionless-node": "^0.11.0"
+    "sessionless-node": "latest"
   }
 }
