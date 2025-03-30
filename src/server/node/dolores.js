@@ -69,7 +69,7 @@ console.log('there are ' + spellbooks.length + ' spellbooks');
       spellbooks
     };
 
-    if(!dolores.fountUUID || !dolores.bdoUUID || !spellbooks || spellbooks.length === 0) {
+    if(!dolores.fountUUID || !dolores.bdoUUID || !spellbooks) {
       throw new Error('bootstrap failed');
     }
 
