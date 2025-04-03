@@ -9,7 +9,7 @@ const nullify = (post) => {
   const url = post.embed && post.embed.playlist;
 
   return {
-    uuid: post.cid,
+    uuid: post.uri,
     description: post.record && post.record.text,
     images,
     url
