@@ -55,6 +55,20 @@ console.log('throwing');
     return JSON.parse(keyString);
   },
 
+  saveFeeds: async (protocol, feeds) => {
+    const feedString = JSON.stringify(feeds);
+    await client.set(protocol, feedString);
+
+    return true;
+  },
+
+  getFeeds: async (protocol) => {
+    const feedString = await client.get(protocol) || '{}';
+    const feeds = JSON.parse(feedString);
+
+    return feeds;
+  },
+
   putVideo: async (user, video) => {
 console.log('putting video', video);
     const uuid = user.uuid;

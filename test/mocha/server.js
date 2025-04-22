@@ -95,6 +95,12 @@ it('should put a mov video', async () => {
   res.body.success.should.equal(true);
 }).timeout(60000);
 
+// Need to figure out how to handle admin privelages.
+/*it('should save feeds', async () => {
+  const timestamp = new Date().getTime() + '';
+  const 
+});*/
+
 it('should get a feed of latest', async () => {
   const timestamp = new Date().getTime() + '';
   const tags = [];

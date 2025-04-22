@@ -2,6 +2,7 @@ import fs from 'fs';
 import { BskyAgent } from '@atproto/api';
 import db from '../../persistence/db.js';
 
+const PROTOCOL = 'at-protocol';
 const MAX_POSTS = 500;
 
 const nullify = (post) => {
@@ -42,19 +43,27 @@ const bsky = {
     console.warn(err);
     }
 
-    const videoFeeds = [];
-    const VIDEO_FEED_URI = 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/thevids';
-    videoFeeds.push(VIDEO_FEED_URI);
+    const atProtocolFeeds = await db.getFeeds(PROTOCOL);
 
-    const picFeeds = [];
-    const CAT_PICS_URI = 'at://did:plc:ss74gre7gpgnvgvzf5zfcsks/app.bsky.feed.generator/aaaas563rbb5q';
-    picFeeds.push(CAT_PICS_URI);
+    const videoFeeds = atProtocolFeeds.videoFeeds || [];
+    if(videoFeeds === 0) {
+      const VIDEO_FEED_URI = 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/thevids';
+      videoFeeds.push(VIDEO_FEED_URI);
+    }
 
-    const genericFeeds = [];
-    const SCIENCE_URI = 'at://did:plc:jfhpnnst6flqway4eaeqzj2a/app.bsky.feed.generator/for-science';
-    const BOOKS_URI = 'at://did:plc:geoqe3qls5mwezckxxsewys2/app.bsky.feed.generator/aaabrbjcg4hmk';
-    genericFeeds.push(SCIENCE_URI);
-    genericFeeds.push(BOOKS_URI);
+    const picFeeds = atProtocolFeeds.picFeeds || [];
+    if(picFeeds === 0) {
+      const CAT_PICS_URI = 'at://did:plc:ss74gre7gpgnvgvzf5zfcsks/app.bsky.feed.generator/aaaas563rbb5q';
+      picFeeds.push(CAT_PICS_URI);
+    }
+
+    const genericFeeds = atProtocolFeeds.genericFeeds || [];
+    if(genericFeeds.length === 0) {
+      const SCIENCE_URI = 'at://did:plc:jfhpnnst6flqway4eaeqzj2a/app.bsky.feed.generator/for-science';
+      const BOOKS_URI = 'at://did:plc:geoqe3qls5mwezckxxsewys2/app.bsky.feed.generator/aaabrbjcg4hmk';
+      genericFeeds.push(SCIENCE_URI);
+      genericFeeds.push(BOOKS_URI);
+    }
 
     try {
       const videoPromises = videoFeeds.map($ => agent.app.bsky.feed.getFeed({feed: $, limit: 30}));

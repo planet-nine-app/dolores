@@ -142,6 +142,37 @@ console.warn(err);
   }
 });
 
+app.put('/admin/:uuid/feeds', async (req, res) => {
+  try {
+    const uuid = req.params.uuid;
+    const timestamp = req.body.timestamp;
+    const protocol = req.body.protocol;
+    const feeds = req.body.feeds;
+    const signature = req.body.signatue;
+    const message = timestamp + uuid;
+
+    const foundUser = await db.getUserByUUID(req.params.uuid);
+
+    if(founderUser.pubKey !== process.env.ADMIN_PUB_KEY) {
+      res.status(403);
+      return res.send({error: 'auth error'});
+    }
+
+    if(!signature || !sessionless.verifySignature(signature, message, foundUser.pubKey)) {
+      res.status(403);
+      return res.send({error: 'auth error'});
+    }
+
+    await db.saveFeeds(protocol, feeds);
+
+    res.send({success: true});
+  } catch(err) {
+console.warn(err);
+    res.status(404);
+    res.send({error: 'not found'});
+  }
+});
+
 app.put('/user/:uuid/short-form/video', async (req, res) => {
   try {
   const uuid = req.params.uuid;
