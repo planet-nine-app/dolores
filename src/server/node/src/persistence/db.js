@@ -1,5 +1,7 @@
 import { createClient } from './client.js';
 import sessionless from 'sessionless-node';
+
+const PROTOCOLS = ['at-protocol'];
   
 const client = await createClient()
   .on('error', err => console.log('Client Error', err))
@@ -13,6 +15,17 @@ console.log('throwing');
       throw new Error('not found');
     }
     let parsedUser = JSON.parse(user);
+
+    const feeds = {};
+ 
+    for(var i = 0; i < PROTOCOLS.length; i++) {
+      const protocol = PROTOCOLS[i];
+      const feed = await db.getFeeds(protocol);
+      feeds[protocol] = feed;
+    }
+
+    parsedUser.feeds = feeds;
+
     return parsedUser; 
   },
 
@@ -23,6 +36,17 @@ console.log('throwing');
       throw new Error('not found');
     }
     let parsedUser = JSON.parse(user);
+
+    const feeds = {};
+ 
+    for(var i = 0; i < PROTOCOLS.length; i++) {
+      const protocol = PROTOCOLS[i];
+      const feed = await db.getFeeds(protocol);
+      feeds[protocol] = feed;
+    }
+
+    parsedUser.feeds = feeds;
+
     return parsedUser; 
   },
 
