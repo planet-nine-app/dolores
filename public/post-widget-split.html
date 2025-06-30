@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Component Demo</title>
+    <link rel="stylesheet" href="post-widget.css">
+</head>
+<body>
+    <div id="post-container"></div>
+
+    <script src="post-widget.js"></script>
+    <script>
+        // Sample data with different layouts, textarea, and button examples
+        var samplePosts = [
+            {
+                name: 'Whit\'s Pizza Pies',
+                layout: 'mixed', // Default mixed layout (image + description side-by-side)
+                dateTimes: [
+                    {
+                        startDateTime: new Date().getTime() + 600000,
+                        endDateTime: new Date().getTime() + 660000
+                    }
+                ],
+                location: '',
+                description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Check out our website at https://example.com for more info! Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Visit https://another-site.com for updates. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.',
+                address: {
+                    line1: 'Alleyway Bar',
+                    line2: '123 N Alberta Ave'
+                },
+                imageUri: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&h=400&fit=crop',
+                enableTextArea: true,
+                textAreaPlaceholder: 'Tell us about your pizza preferences...',
+                textAreaValue: 'I love their pepperoni pizza! Check out the menu at https://whitspizza.com and follow them on https://twitter.com/whitspizza for daily specials.',
+                buttons: {
+                    single: {
+                        id: 'add-to-calendar',
+                        text: 'Add to Calendar',
+                        icon: 'calendar',
+                        style: 'primary'
+                    }
+                }
+            },
+            {
+                name: 'Downtown Food Truck Festival',
+                layout: 'image-only', // Full-width image layout
+                dateTimes: [
+                    {
+                        startDateTime: new Date().getTime() + 86400000,
+                        endDateTime: new Date().getTime() + 86400000 + 14400000
+                    }
+                ],
+                location: '',
+                description: 'Join us for an amazing food truck festival featuring the best local vendors. More details at https://foodtruckfest.com and follow us at https://twitter.com/foodtrucks for live updates!',
+                address: {
+                    line1: 'Pioneer Courthouse Square',
+                    line2: '701 SW 5th Ave'
+                },
+                imageUri: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=400&fit=crop',
+                enableTextArea: true,
+                textAreaPlaceholder: 'Share your food truck recommendations...',
+                textAreaValue: '',
+                buttons: {
+                    dual: [
+                        {
+                            id: 'get-directions',
+                            text: 'Get Directions',
+                            icon: 'map',
+                            style: 'primary'
+                        },
+                        {
+                            id: 'rsvp',
+                            text: 'RSVP',
+                            icon: 'rsvp',
+                            style: 'success'
+                        }
+                    ]
+                }
+            },
+            {
+                name: 'Coffee Meetup',
+                layout: 'mixed', // Mixed layout with no image
+                dateTimes: [
+                    {
+                        startDateTime: new Date().getTime() + 172800000,
+                        endDateTime: new Date().getTime() + 172800000 + 3600000
+                    }
+                ],
+                location: '',
+                description: 'A casual coffee meetup for local entrepreneurs and freelancers. No agenda, just good coffee and great conversation!',
+                address: {
+                    line1: 'Blue Bottle Coffee',
+                    line2: '1355 NW Everett St'
+                },
+                imageUri: null, // No image for this post
+                enableTextArea: false, // No textarea for this post
+                buttons: {
+                    dual: [
+                        {
+                            id: 'interested',
+                            text: 'I\'m Interested',
+                            icon: 'heart',
+                            style: 'secondary'
+                        },
+                        {
+                            id: 'share',
+                            text: 'Share Event',
+                            icon: 'external',
+                            style: 'secondary'
+                        }
+                    ]
+                }
+            },
+            {
+                name: 'Art Gallery Opening',
+                layout: 'image-only', // Image-only layout
+                dateTimes: [
+                    {
+                        startDateTime: new Date().getTime() + 259200000,
+                        endDateTime: new Date().getTime() + 259200000 + 7200000
+                    }
+                ],
+                location: '',
+                description: 'Contemporary art exhibition featuring local Portland artists. Wine and light refreshments will be served.',
+                address: {
+                    line1: 'Portland Art Museum',
+                    line2: '1219 SW Park Ave'
+                },
+                imageUri: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=400&fit=crop',
+                enableTextArea: true,
+                textAreaPlaceholder: 'What type of art interests you most?',
+                textAreaValue: 'Looking forward to seeing the contemporary pieces! More info at https://portlandartmuseum.org',
+                buttons: {
+                    single: {
+                        id: 'buy-tickets',
+                        text: 'Buy Tickets ($15)',
+                        icon: 'star',
+                        style: 'warning'
+                    }
+                }
+            }
+        ];
+
+        // Initialize demo
+        function init() {
+            var container = document.getElementById('post-container');
+            
+            // Create posts with different themes and layouts
+            var post1 = PostComponent.createPost(
+                samplePosts[0], 
+                PostComponent.defaultConfig, 
+                function(post) { alert('Post clicked: ' + post.name); },
+                function(post) { alert('Name clicked: ' + post.name); },
+                function(dateTime, post) { alert('DateTime clicked: ' + PostComponent.formatDateTime(dateTime.startDateTime, dateTime.endDateTime)); },
+                function(post) { alert('Address clicked: ' + post.address.line1 + ', ' + post.address.line2); },
+                function(post) { alert('Share clicked for: ' + post.name); },
+                function(buttonId, buttonText, post) { alert('Button clicked: ' + buttonText + ' (ID: ' + buttonId + ') for ' + post.name); }
+            );
+            
+            var post2 = PostComponent.createPost(
+                samplePosts[1], 
+                PostComponent.defaultConfig, 
+                function(post) { alert('Post clicked: ' + post.name); },
+                function(post) { alert('Name clicked: ' + post.name); },
+                function(dateTime, post) { alert('DateTime clicked: ' + PostComponent.formatDateTime(dateTime.startDateTime, dateTime.endDateTime)); },
+                function(post) { alert('Address clicked: ' + post.address.line1 + ', ' + post.address.line2); },
+                function(post) { alert('Share clicked for: ' + post.name); },
+                function(buttonId, buttonText, post) { alert('Button clicked: ' + buttonText + ' (ID: ' + buttonId + ') for ' + post.name); }
+            );
+            
+            var post3 = PostComponent.createPost(
+                samplePosts[2], 
+                PostComponent.darkConfig, 
+                function(post) { alert('Post clicked: ' + post.name); },
+                function(post) { alert('Name clicked: ' + post.name); },
+                function(dateTime, post) { alert('DateTime clicked: ' + PostComponent.formatDateTime(dateTime.startDateTime, dateTime.endDateTime)); },
+                function(post) { alert('Address clicked: ' + post.address.line1 + ', ' + post.address.line2); },
+                function(post) { alert('Share clicked for: ' + post.name); },
+                function(buttonId, buttonText, post) { alert('Button clicked: ' + buttonText + ' (ID: ' + buttonId + ') for ' + post.name); }
+            );
+            
+            var post4 = PostComponent.createPost(
+                samplePosts[3], 
+                PostComponent.colorfulConfig, 
+                function(post) { alert('Post clicked: ' + post.name); },
+                function(post) { alert('Name clicked: ' + post.name); },
+                function(dateTime, post) { alert('DateTime clicked: ' + PostComponent.formatDateTime(dateTime.startDateTime, dateTime.endDateTime)); },
+                function(post) { alert('Address clicked: ' + post.address.line1 + ', ' + post.address.line2); },
+                function(post) { alert('Share clicked for: ' + post.name); },
+                function(buttonId, buttonText, post) { alert('Button clicked: ' + buttonText + ' (ID: ' + buttonId + ') for ' + post.name); }
+            );
+            
+            container.appendChild(post1);
+            container.appendChild(post2);
+            container.appendChild(post3);
+            container.appendChild(post4);
+        }
+
+        // Run when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

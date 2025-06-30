@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Widget Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #e2e8f0;
+            background: #0f172a;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: white;
+            padding: 40px 0;
+            margin: -20px -20px 40px -20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(5, 150, 105, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .docs-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 1200px) {
+            .docs-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section {
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            border: 1px solid #334155;
+        }
+
+        .section h2 {
+            color: #10b981;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .section h3 {
+            color: #f1f5f9;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .section p {
+            margin-bottom: 15px;
+            color: #cbd5e1;
+        }
+
+        .code-block {
+            background: #0f172a;
+            color: #10b981;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 15px 0;
+            border: 1px solid #334155;
+        }
+
+        .editor {
+            margin-bottom: 20px;
+        }
+
+        .editor-label {
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+            color: #f1f5f9;
+        }
+
+        .editor-textarea {
+            width: 100%;
+            height: 300px;
+            padding: 15px;
+            border: 2px solid #475569;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            transition: border-color 0.2s ease;
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .editor-textarea:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+
+        .editor-textarea::placeholder {
+            color: #64748b;
+        }
+
+        .editor-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+            background: linear-gradient(135deg, #059669 0%, #065f46 100%);
+        }
+
+        .btn-secondary {
+            background: #374151;
+            color: #e2e8f0;
+            border: 1px solid #4b5563;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        .preview-container {
+            background: #0f172a;
+            padding: 20px;
+            border-radius: 8px;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #334155;
+        }
+
+        .error-message {
+            background: #7f1d1d;
+            border: 1px solid #dc2626;
+            color: #fca5a5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            background: #064e3b;
+            border: 1px solid #10b981;
+            color: #6ee7b7;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .api-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .api-table th,
+        .api-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #475569;
+        }
+
+        .api-table th {
+            background: #374151;
+            font-weight: 600;
+            color: #f1f5f9;
+        }
+
+        .api-table td {
+            color: #cbd5e1;
+        }
+
+        .api-table code {
+            background: #374151;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #10b981;
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .example-item {
+            background: #374151;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #10b981;
+        }
+
+        .example-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #f1f5f9;
+        }
+
+        .example-desc {
+            font-size: 14px;
+            color: #cbd5e1;
+            margin-bottom: 10px;
+        }
+
+        .load-example {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.2s ease;
+        }
+
+        .load-example:hover {
+            background: #059669;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Post Widget Documentation</h1>
+            <p>Interactive event cards with images, textareas, and gradient buttons</p>
+        </header>
+
+        <div class="docs-layout">
+            <!-- Documentation Section -->
+            <div class="section">
+                <h2>📖 Documentation</h2>
+                
+                <h3>Overview</h3>
+                <p>The Post Widget creates beautiful, interactive event cards with support for images, descriptions, textareas, and gradient buttons. Perfect for event listings, social posts, and interactive content.</p>
+
+                <h3>Key Features</h3>
+                <ul style="margin-left: 20px; color: #cbd5e1;">
+                    <li>Two layout modes: Mixed (image + description) and Image-only</li>
+                    <li>Interactive textarea with 500-character limit and link detection</li>
+                    <li>Gradient buttons (single or dual side-by-side)</li>
+                    <li>Configurable themes and styling</li>
+                    <li>Click handlers for all interactive elements</li>
+                    <li>Responsive design with hover effects</li>
+                </ul>
+
+                <h3>Basic Usage</h3>
+                <div class="code-block">// Create a post
+var post = PostComponent.createPost(
+    postData,           // Post configuration
+    themeConfig,        // Optional theme
+    onPostClick,        // Post click handler
+    onNameClick,        // Name click handler  
+    onDateTimeClick,    // DateTime click handler
+    onAddressClick,     // Address click handler
+    onShareClick,       // Share button handler
+    onButtonClick       // Custom button handler
+);</div>
+
+                <h3>Post Data Structure</h3>
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>name</code></td>
+                            <td>string</td>
+                            <td>Event title</td>
+                        </tr>
+                        <tr>
+                            <td><code>layout</code></td>
+                            <td>string</td>
+                            <td>"mixed" or "image-only"</td>
+                        </tr>
+                        <tr>
+                            <td><code>imageUri</code></td>
+                            <td>string</td>
+                            <td>Direct image URL</td>
+                        </tr>
+                        <tr>
+                            <td><code>description</code></td>
+                            <td>string</td>
+                            <td>Event description (supports links)</td>
+                        </tr>
+                        <tr>
+                            <td><code>dateTimes</code></td>
+                            <td>array</td>
+                            <td>Array of start/end DateTime objects</td>
+                        </tr>
+                        <tr>
+                            <td><code>address</code></td>
+                            <td>object</td>
+                            <td>line1, line2 properties</td>
+                        </tr>
+                        <tr>
+                            <td><code>enableTextArea</code></td>
+                            <td>boolean</td>
+                            <td>Show interactive textarea</td>
+                        </tr>
+                        <tr>
+                            <td><code>buttons</code></td>
+                            <td>object</td>
+                            <td>Button configuration</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Button Configuration</h3>
+                <div class="code-block">// Single button
+buttons: {
+    single: {
+        id: 'my-button',
+        text: 'Button Text',
+        icon: 'calendar',     // Optional icon
+        style: 'primary'      // primary, secondary, success, warning, danger
+    }
+}
+
+// Dual buttons
+buttons: {
+    dual: [
+        { id: 'btn1', text: 'Button 1', icon: 'map', style: 'primary' },
+        { id: 'btn2', text: 'Button 2', icon: 'heart', style: 'success' }
+    ]
+}</div>
+
+                <h3>Available Icons</h3>
+                <p><code>calendar</code>, <code>map</code>, <code>star</code>, <code>heart</code>, <code>external</code>, <code>rsvp</code>, <code>clock</code>, <code>location</code>, <code>share</code></p>
+
+                <h3>Theme Configurations</h3>
+                <ul style="margin-left: 20px; color: #cbd5e1;">
+                    <li><code>PostComponent.defaultConfig</code> - Dark theme with green accents</li>
+                    <li><code>PostComponent.darkConfig</code> - Alternative dark theme</li>
+                    <li><code>PostComponent.colorfulConfig</code> - Gradient theme</li>
+                </ul>
+            </div>
+
+            <!-- Live Preview Section -->
+            <div class="section">
+                <h2>🚀 Live Preview</h2>
+                
+                <div class="editor">
+                    <label class="editor-label">Post Configuration (JSON):</label>
+                    <textarea id="configEditor" class="editor-textarea" placeholder="Paste your post configuration here..."></textarea>
+                </div>
+
+                <div class="editor-buttons">
+                    <button class="btn btn-primary" onclick="renderPreview()">Render Preview</button>
+                    <button class="btn btn-secondary" onclick="clearPreview()">Clear</button>
+                </div>
+
+                <div id="errorContainer"></div>
+                <div id="successContainer"></div>
+
+                <div id="previewContainer" class="preview-container">
+                    <p style="color: #cbd5e1;">Enter a post configuration above and click "Render Preview" to see your widget!</p>
+                </div>
+
+                <h3>Quick Examples</h3>
+                <div class="example-grid">
+                    <div class="example-item">
+                        <div class="example-title">Basic Event</div>
+                        <div class="example-desc">Simple event with image and single button</div>
+                        <button class="load-example" onclick="loadExample('basic')">Load Example</button>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-title">Image-Only Layout</div>
+                        <div class="example-desc">Full-width image with dual buttons</div>
+                        <button class="load-example" onclick="loadExample('imageOnly')">Load Example</button>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-title">With Textarea</div>
+                        <div class="example-desc">Interactive textarea with link detection</div>
+                        <button class="load-example" onclick="loadExample('textarea')">Load Example</button>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-title">No Image</div>
+                        <div class="example-desc">Text-only event with placeholder</div>
+                        <button class="load-example" onclick="loadExample('noImage')">Load Example</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Post Widget CSS and JS -->
+    <style>
+        /* Post Widget CSS */
+        .post-card {
+            width: 356px;
+            height: 506px;
+            background: var(--bg-color, #ffffff);
+            border-radius: var(--container-border-radius, 12px);
+            box-shadow: var(--container-shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
+            border: 1px solid var(--border-color, #e5e5e5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+        }
+
+        .post-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px var(--shadow-color, rgba(0, 0, 0, 0.15));
+        }
+
+        .post-content {
+            padding: var(--container-padding, 16px);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            gap: var(--section-gap, 12px);
+        }
+
+        .post-top-section {
+            display: flex;
+            gap: var(--section-gap, 12px);
+            height: 268px;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-color, #e5e5e5) transparent;
+        }
+
+        .post-top-section::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .post-top-section::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .post-top-section::-webkit-scrollbar-thumb {
+            background: var(--border-color, #e5e5e5);
+            border-radius: 2px;
+        }
+
+        .post-top-section.image-only {
+            height: auto;
+            overflow: visible;
+        }
+
+        .post-image-full {
+            width: 100%;
+            height: 200px;
+            background: var(--border-color, #e5e5e5);
+            border-radius: var(--image-border-radius, 8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            padding: var(--image-padding, 4px);
+        }
+
+        .post-image-full img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: calc(var(--image-border-radius, 8px) - var(--image-padding, 4px));
+            transition: transform 0.3s ease;
+        }
+
+        .post-image-full:hover img {
+            transform: scale(1.02);
+        }
+
+        .post-image-full .placeholder,
+        .post-image-full .image-loading,
+        .post-image-full .image-error {
+            color: var(--text-secondary, #666666);
+            font-size: 14px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .post-image {
+            width: 268px;
+            height: 268px;
+            background: var(--border-color, #e5e5e5);
+            border-radius: var(--image-border-radius, 8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            overflow: hidden;
+            position: relative;
+            padding: var(--image-padding, 4px);
+        }
+
+        .post-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: calc(var(--image-border-radius, 8px) - var(--image-padding, 4px));
+            transition: transform 0.3s ease;
+        }
+
+        .post-image:hover img {
+            transform: scale(1.02);
+        }
+
+        .post-image .placeholder {
+            color: var(--text-secondary, #666666);
+            font-size: 14px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .post-image .image-loading {
+            color: var(--text-secondary, #666666);
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .post-image .image-error {
+            color: var(--text-secondary, #666666);
+            font-size: 12px;
+            text-align: center;
+            padding: 20px;
+            line-height: 1.4;
+        }
+
+        .post-description-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 300px;
+            width: 300px;
+        }
+
+        .post-description {
+            font-size: var(--description-font-size, 14px);
+            font-weight: var(--description-font-weight, 400);
+            line-height: var(--description-line-height, 20px);
+            color: var(--text-secondary, #666666);
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: var(--text-gap, 8px);
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-color, #e5e5e5) transparent;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .post-description::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .post-description::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .post-description::-webkit-scrollbar-thumb {
+            background: var(--border-color, #e5e5e5);
+            border-radius: 2px;
+        }
+
+        .post-description a {
+            color: var(--text-accent, #2563eb);
+            text-decoration: underline;
+        }
+
+        .post-description a:hover {
+            text-decoration: none;
+        }
+
+        .post-name {
+            font-size: var(--name-font-size, 18px);
+            font-weight: var(--name-font-weight, 600);
+            line-height: var(--name-line-height, 24px);
+            color: var(--text-primary, #1a1a1a);
+            margin-bottom: var(--text-gap, 8px);
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .post-name:hover {
+            color: var(--text-accent, #2563eb);
+        }
+
+        .post-datetime-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: var(--text-gap, 8px);
+        }
+
+        .post-datetime {
+            font-size: var(--datetime-font-size, 14px);
+            font-weight: var(--datetime-font-weight, 500);
+            line-height: var(--datetime-line-height, 18px);
+            color: var(--text-accent, #2563eb);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+            padding: 2px 0;
+        }
+
+        .post-datetime:hover {
+            opacity: 0.8;
+        }
+
+        .clock-icon {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+        }
+
+        .location-icon {
+            width: 12px;
+            height: 12px;
+            flex-shrink: 0;
+            margin-right: 4px;
+        }
+
+        .post-address-container {
+            margin-top: auto;
+            padding-top: var(--text-gap, 8px);
+            border-top: 1px solid var(--border-color, #e5e5e5);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .post-address-text {
+            flex: 1;
+        }
+
+        .post-address {
+            font-size: var(--address-font-size, 12px);
+            font-weight: var(--address-font-weight, 400);
+            line-height: var(--address-line-height, 16px);
+            color: var(--text-secondary, #666666);
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .post-address:hover {
+            color: var(--text-accent, #2563eb);
+        }
+
+        .post-textarea-container {
+            margin-bottom: var(--text-gap, 8px);
+        }
+
+        .post-textarea {
+            width: 100%;
+            min-height: 80px;
+            max-height: 120px;
+            padding: 12px;
+            border: 1px solid var(--border-color, #e5e5e5);
+            border-radius: var(--image-border-radius, 8px);
+            background: var(--bg-color, #ffffff);
+            color: var(--text-primary, #1a1a1a);
+            font-family: inherit;
+            font-size: var(--description-font-size, 14px);
+            line-height: var(--description-line-height, 20px);
+            resize: vertical;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-color, #e5e5e5) transparent;
+        }
+
+        .post-textarea::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .post-textarea::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .post-textarea::-webkit-scrollbar-thumb {
+            background: var(--border-color, #e5e5e5);
+            border-radius: 2px;
+        }
+
+        .post-textarea:focus {
+            outline: none;
+            border-color: var(--text-accent, #2563eb);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .post-textarea::placeholder {
+            color: var(--text-secondary, #666666);
+        }
+
+        .post-textarea-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 4px;
+            font-size: 12px;
+            color: var(--text-secondary, #666666);
+        }
+
+        .post-textarea-char-count {
+            transition: color 0.2s ease;
+        }
+
+        .post-textarea-char-count.warning {
+            color: #f59e0b;
+        }
+
+        .post-textarea-char-count.error {
+            color: #ef4444;
+        }
+
+        .post-textarea-preview {
+            margin-top: 8px;
+            padding: 8px 12px;
+            background: var(--border-color, #e5e5e5);
+            border-radius: var(--image-border-radius, 8px);
+            font-size: var(--description-font-size, 14px);
+            line-height: var(--description-line-height, 20px);
+            color: var(--text-secondary, #666666);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .post-textarea-preview a {
+            color: var(--text-accent, #2563eb);
+            text-decoration: underline;
+        }
+
+        .post-textarea-preview a:hover {
+            text-decoration: none;
+        }
+
+        .post-buttons-container {
+            margin-bottom: var(--text-gap, 8px);
+        }
+
+        .post-button {
+            border: none;
+            border-radius: var(--image-border-radius, 8px);
+            font-family: inherit;
+            font-size: var(--description-font-size, 14px);
+            font-weight: 600;
+            line-height: 1;
+            padding: 14px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 48px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .post-button:active {
+            transform: translateY(-1px);
+        }
+
+        .post-button-icon {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .post-button-single {
+            width: 100%;
+            background: linear-gradient(135deg, var(--text-accent, #10b981) 0%, #047857 100%);
+            color: white;
+        }
+
+        .post-button-single:hover {
+            background: linear-gradient(135deg, #059669 0%, #065f46 100%);
+        }
+
+        .post-buttons-dual {
+            display: flex;
+            gap: var(--section-gap, 12px);
+        }
+
+        .post-button-dual {
+            flex: 1;
+            color: white;
+        }
+
+        .post-button-primary {
+            background: linear-gradient(135deg, var(--text-accent, #10b981) 0%, #047857 100%);
+        }
+
+        .post-button-primary:hover {
+            background: linear-gradient(135deg, #059669 0%, #065f46 100%);
+        }
+
+        .post-button-secondary {
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+        }
+
+        .post-button-secondary:hover {
+            background: linear-gradient(135deg, #475569 0%, #334155 100%);
+        }
+
+        .post-button-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .post-button-success:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        }
+
+        .post-button-warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .post-button-warning:hover {
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+        }
+
+        .post-button-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .post-button-danger:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        }
+
+        .post-button-outline {
+            background: transparent;
+            border: 2px solid var(--text-accent, #10b981);
+            color: var(--text-accent, #10b981);
+        }
+
+        .post-button-outline:hover {
+            background: var(--text-accent, #10b981);
+            color: white;
+        }
+
+        .post-share-button {
+            background: var(--text-accent, #10b981);
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: white;
+            margin-left: 8px;
+            flex-shrink: 0;
+        }
+
+        .post-share-button:hover {
+            background: var(--text-primary, #f1f5f9);
+            color: var(--text-accent, #10b981);
+            transform: scale(1.1);
+        }
+
+        .share-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        .post-textarea:focus {
+            outline: none;
+            border-color: var(--text-accent, #10b981);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+    </style>
+
+    <script>
+        // Post Widget JavaScript (embedded for demo)
+        var defaultConfig = {
+            colors: {
+                background: '#1e293b',
+                text: {
+                    primary: '#f1f5f9',
+                    secondary: '#cbd5e1',
+                    accent: '#10b981'
+                },
+                border: '#475569',
+                shadow: 'rgba(0, 0, 0, 0.3)'
+            },
+            typography: {
+                name: {
+                    fontSize: '18px',
+                    fontWeight: '600',
+                    lineHeight: '24px'
+                },
+                description: {
+                    fontSize: '14px',
+                    fontWeight: '400',
+                    lineHeight: '20px'
+                },
+                dateTime: {
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    lineHeight: '18px'
+                },
+                address: {
+                    fontSize: '12px',
+                    fontWeight: '400',
+                    lineHeight: '16px'
+                }
+            },
+            spacing: {
+                containerPadding: '16px',
+                sectionGap: '12px',
+                textGap: '8px',
+                imagePadding: '4px',
+                imageBorderRadius: '8px',
+                containerBorderRadius: '12px'
+            },
+            shadows: {
+                container: '0 4px 16px rgba(0, 0, 0, 0.2)'
+            }
+        };
+
+        var icons = {
+            clock: '<svg class="clock-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><polyline points="12,6 12,12 16,14" stroke="currentColor" stroke-width="2"/></svg>',
+            location: '<svg class="location-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/></svg>',
+            share: '<svg class="share-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" stroke="currentColor" stroke-width="2"/><polyline points="16,6 12,2 8,6" stroke="currentColor" stroke-width="2"/><line x1="12" y1="2" x2="12" y2="15" stroke="currentColor" stroke-width="2"/></svg>',
+            calendar: '<svg class="post-button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" stroke-width="2"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2"/></svg>',
+            map: '<svg class="post-button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="1,6 1,22 8,18 16,22 23,18 23,2 16,6 8,2" stroke="currentColor" stroke-width="2" fill="none"/><line x1="8" y1="2" x2="8" y2="18" stroke="currentColor" stroke-width="2"/><line x1="16" y1="6" x2="16" y2="22" stroke="currentColor" stroke-width="2"/></svg>',
+            star: '<svg class="post-button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" stroke="currentColor" stroke-width="2"/></svg>',
+            heart: '<svg class="post-button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" stroke-width="2"/></svg>',
+            external: '<svg class="post-button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" stroke="currentColor" stroke-width="2"/><polyline points="15,3 21,3 21,9" stroke="currentColor" stroke-width="2"/><line x1="10" y1="14" x2="21" y2="3" stroke="currentColor" stroke-width="2"/></svg>',
+            rsvp: '<svg class="post-button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/><circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2"/><polyline points="17,11 19,13 23,9" stroke="currentColor" stroke-width="2"/></svg>'
+        };
+
+        function formatDateTime(startDateTime, endDateTime) {
+            var start = new Date(startDateTime);
+            var end = new Date(endDateTime);
+            
+            function formatTime(date) {
+                return date.toLocaleTimeString('en-US', {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
+                });
+            }
+            
+            function formatDate(date) {
+                return date.toLocaleDateString('en-US', {
+                    weekday: 'short',
+                    month: 'short',
+                    day: 'numeric'
+                });
+            }
+            
+            var isSameDay = start.toDateString() === end.toDateString();
+            
+            if (isSameDay) {
+                return formatDate(start) + ' • ' + formatTime(start) + ' - ' + formatTime(end);
+            } else {
+                return formatDate(start) + ' ' + formatTime(start) + ' - ' + formatDate(end) + ' ' + formatTime(end);
+            }
+        }
+
+        function linkifyText(text) {
+            var urlRegex = /(https:\/\/[^\s]+)/g;
+            return text.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
+        }
+
+        function applyCSSVariables(element, config) {
+            var style = element.style;
+            
+            style.setProperty('--bg-color', config.colors.background);
+            style.setProperty('--text-primary', config.colors.text.primary);
+            style.setProperty('--text-secondary', config.colors.text.secondary);
+            style.setProperty('--text-accent', config.colors.text.accent);
+            style.setProperty('--border-color', config.colors.border);
+            style.setProperty('--shadow-color', config.colors.shadow);
+            
+            style.setProperty('--name-font-size', config.typography.name.fontSize);
+            style.setProperty('--name-font-weight', config.typography.name.fontWeight);
+            style.setProperty('--name-line-height', config.typography.name.lineHeight);
+            
+            style.setProperty('--description-font-size', config.typography.description.fontSize);
+            style.setProperty('--description-font-weight', config.typography.description.fontWeight);
+            style.setProperty('--description-line-height', config.typography.description.lineHeight);
+            
+            style.setProperty('--datetime-font-size', config.typography.dateTime.fontSize);
+            style.setProperty('--datetime-font-weight', config.typography.dateTime.fontWeight);
+            style.setProperty('--datetime-line-height', config.typography.dateTime.lineHeight);
+            
+            style.setProperty('--address-font-size', config.typography.address.fontSize);
+            style.setProperty('--address-font-weight', config.typography.address.fontWeight);
+            style.setProperty('--address-line-height', config.typography.address.lineHeight);
+            
+            style.setProperty('--container-padding', config.spacing.containerPadding);
+            style.setProperty('--section-gap', config.spacing.sectionGap);
+            style.setProperty('--text-gap', config.spacing.textGap);
+            style.setProperty('--image-padding', config.spacing.imagePadding);
+            style.setProperty('--image-border-radius', config.spacing.imageBorderRadius);
+            style.setProperty('--container-border-radius', config.spacing.containerBorderRadius);
+            
+            style.setProperty('--container-shadow', config.shadows.container);
+        }
+
+        function createImageElement(imageUri, imageId, onImageLoad, onImageError) {
+            if (imageUri) {
+                var img = document.createElement('img');
+                img.src = imageUri;
+                img.alt = 'Post image';
+                
+                img.onload = function() {
+                    if (onImageLoad) onImageLoad(img);
+                };
+                
+                img.onerror = function() {
+                    if (onImageError) onImageError(img);
+                };
+                
+                return img;
+            } else if (imageId) {
+                var img = document.createElement('img');
+                img.src = '/images/' + imageId;
+                img.alt = 'Post image';
+                
+                img.onload = function() {
+                    if (onImageLoad) onImageLoad(img);
+                };
+                
+                img.onerror = function() {
+                    if (onImageError) onImageError(img);
+                };
+                
+                return img;
+            } else {
+                var placeholder = document.createElement('div');
+                placeholder.className = 'placeholder';
+                placeholder.textContent = 'No Image';
+                return placeholder;
+            }
+        }
+
+        function createButtonHtml(button) {
+            var iconHtml = button.icon && icons[button.icon] ? icons[button.icon] : '';
+            var buttonClasses = 'post-button';
+            
+            if (button.type === 'single') {
+                buttonClasses += ' post-button-single';
+            } else {
+                buttonClasses += ' post-button-dual';
+                if (button.style) {
+                    buttonClasses += ' post-button-' + button.style;
+                } else {
+                    buttonClasses += ' post-button-primary';
+                }
+            }
+            
+            return '<button class="' + buttonClasses + '" data-button-id="' + (button.id || '') + '">' +
+                iconHtml + 
+                '<span>' + button.text + '</span>' +
+                '</button>';
+        }
+
+        function createButtonsSection(buttonsConfig) {
+            if (!buttonsConfig) return '';
+            
+            var html = '<div class="post-buttons-container">';
+            
+            if (buttonsConfig.single) {
+                html += createButtonHtml({
+                    ...buttonsConfig.single,
+                    type: 'single'
+                });
+            }
+            
+            if (buttonsConfig.dual && buttonsConfig.dual.length === 2) {
+                html += '<div class="post-buttons-dual">';
+                buttonsConfig.dual.forEach(function(button) {
+                    html += createButtonHtml({
+                        ...button,
+                        type: 'dual'
+                    });
+                });
+                html += '</div>';
+            }
+            
+            html += '</div>';
+            return html;
+        }
+
+        function createPost(postData, config, onPostClick, onNameClick, onDateTimeClick, onAddressClick, onShareClick, onButtonClick) {
+            config = config || defaultConfig;
+            onPostClick = onPostClick || null;
+            onNameClick = onNameClick || function() { showMessage('success', 'Name clicked: ' + postData.name); };
+            onDateTimeClick = onDateTimeClick || function(dateTime) { showMessage('success', 'DateTime clicked: ' + formatDateTime(dateTime.startDateTime, dateTime.endDateTime)); };
+            onAddressClick = onAddressClick || function() { showMessage('success', 'Address clicked: ' + postData.address.line1 + ', ' + postData.address.line2); };
+            onShareClick = onShareClick || function() { showMessage('success', 'Share clicked for: ' + postData.name); };
+            onButtonClick = onButtonClick || function(buttonId, buttonText) { showMessage('success', 'Button clicked: ' + buttonText + ' (' + buttonId + ')'); };
+            
+            var postCard = document.createElement('div');
+            postCard.className = 'post-card';
+            
+            applyCSSVariables(postCard, config);
+            
+            var dateTimeHtml = '';
+            for (var i = 0; i < postData.dateTimes.length; i++) {
+                dateTimeHtml += '<div class="post-datetime" data-datetime-index="' + i + '">' +
+                    icons.clock +
+                    formatDateTime(postData.dateTimes[i].startDateTime, postData.dateTimes[i].endDateTime) +
+                    '</div>';
+            }
+            
+            var linkedDescription = linkifyText(postData.description);
+            
+            var isImageOnly = postData.layout === 'image-only';
+            var topSectionClass = isImageOnly ? 'post-top-section image-only' : 'post-top-section';
+            var imageClass = isImageOnly ? 'post-image-full' : 'post-image';
+            
+            var topSectionContent = '';
+            if (isImageOnly) {
+                topSectionContent = '<div class="' + imageClass + '" id="image-container-' + Math.random().toString(36).substr(2, 9) + '">' +
+                    '<div class="image-loading">Loading...</div>' +
+                '</div>';
+            } else {
+                topSectionContent = '<div class="' + imageClass + '" id="image-container-' + Math.random().toString(36).substr(2, 9) + '">' +
+                    '<div class="image-loading">Loading...</div>' +
+                '</div>' +
+                '<div class="post-description-container">' +
+                    '<div class="post-description">' + linkedDescription + '</div>' +
+                '</div>';
+            }
+            
+            var descriptionSection = '';
+            if (isImageOnly && postData.description) {
+                descriptionSection = '<div class="post-description" style="margin-bottom: var(--text-gap, 8px);">' + linkedDescription + '</div>';
+            }
+            
+            var textareaSection = '';
+            if (postData.enableTextArea) {
+                var textareaValue = postData.textAreaValue || '';
+                var placeholderText = postData.textAreaPlaceholder || 'Share your thoughts...';
+                textareaSection = 
+                    '<div class="post-textarea-container">' +
+                        '<textarea class="post-textarea" placeholder="' + placeholderText + '" maxlength="500">' + textareaValue + '</textarea>' +
+                        '<div class="post-textarea-info">' +
+                            '<span>Links will be automatically detected</span>' +
+                            '<span class="post-textarea-char-count">0/500</span>' +
+                        '</div>' +
+                        '<div class="post-textarea-preview" style="display: none;"></div>' +
+                    '</div>';
+            }
+            
+            var buttonsSection = createButtonsSection(postData.buttons);
+            
+            postCard.innerHTML = 
+                '<div class="post-content">' +
+                    '<div class="' + topSectionClass + '">' +
+                        topSectionContent +
+                    '</div>' +
+                    descriptionSection +
+                    textareaSection +
+                    buttonsSection +
+                    '<div class="post-name">' + postData.name + '</div>' +
+                    '<div class="post-datetime-container">' +
+                        dateTimeHtml +
+                    '</div>' +
+                    '<div class="post-address-container">' +
+                        '<div class="post-address-text">' +
+                            '<div class="post-address post-address-line1">' +
+                                icons.location + postData.address.line1 +
+                            '</div>' +
+                            '<div class="post-address post-address-line2">' + postData.address.line2 + '</div>' +
+                        '</div>' +
+                        '<button class="post-share-button">' + icons.share + '</button>' +
+                    '</div>' +
+                '</div>';
+            
+            var imageContainer = postCard.querySelector('.' + imageClass);
+            var imageElement = createImageElement(
+                postData.imageUri,
+                postData.imageId,
+                function(img) {
+                    imageContainer.innerHTML = '';
+                    imageContainer.appendChild(img);
+                },
+                function(img) {
+                    imageContainer.innerHTML = '<div class="image-error">Image failed to load</div>';
+                }
+            );
+            
+            if (imageElement.className === 'placeholder') {
+                imageContainer.innerHTML = '';
+                imageContainer.appendChild(imageElement);
+            }
+            
+            var textarea = postCard.querySelector('.post-textarea');
+            if (textarea) {
+                var charCount = postCard.querySelector('.post-textarea-char-count');
+                var preview = postCard.querySelector('.post-textarea-preview');
+                
+                function updateTextarea() {
+                    var value = textarea.value;
+                    var length = value.length;
+                    
+                    charCount.textContent = length + '/500';
+                    charCount.className = 'post-textarea-char-count';
+                    if (length > 450) {
+                        charCount.classList.add('warning');
+                    }
+                    if (length >= 500) {
+                        charCount.classList.add('error');
+                    }
+                    
+                    if (value.trim()) {
+                        preview.innerHTML = linkifyText(value);
+                        preview.style.display = 'block';
+                    } else {
+                        preview.style.display = 'none';
+                    }
+                }
+                
+                updateTextarea();
+                
+                textarea.addEventListener('input', updateTextarea);
+                textarea.addEventListener('paste', function() {
+                    setTimeout(updateTextarea, 10);
+                });
+            }
+            
+            var buttons = postCard.querySelectorAll('.post-button');
+            buttons.forEach(function(button) {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var buttonId = button.getAttribute('data-button-id') || '';
+                    var buttonText = button.querySelector('span').textContent;
+                    onButtonClick(buttonId, buttonText, postData);
+                });
+            });
+            
+            if (onPostClick) {
+                postCard.addEventListener('click', function(e) {
+                    if (!e.target.closest('.post-name, .post-datetime, .post-address, .post-share-button, .post-description a, .post-button, .post-textarea')) {
+                        onPostClick(postData);
+                    }
+                });
+            }
+            
+            var nameElement = postCard.querySelector('.post-name');
+            nameElement.addEventListener('click', function(e) {
+                e.stopPropagation();
+                onNameClick(postData);
+            });
+            
+            var dateTimeElements = postCard.querySelectorAll('.post-datetime');
+            for (var i = 0; i < dateTimeElements.length; i++) {
+                (function(index) {
+                    dateTimeElements[index].addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        onDateTimeClick(postData.dateTimes[index], postData);
+                    });
+                })(i);
+            }
+            
+            var addressElements = postCard.querySelectorAll('.post-address');
+            for (var i = 0; i < addressElements.length; i++) {
+                addressElements[i].addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    onAddressClick(postData);
+                });
+            }
+            
+            var shareButton = postCard.querySelector('.post-share-button');
+            shareButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                onShareClick(postData);
+            });
+            
+            return postCard;
+        }
+
+        // Documentation page functionality
+        var examples = {
+            basic: {
+                name: 'Summer Music Festival',
+                layout: 'mixed',
+                dateTimes: [
+                    {
+                        startDateTime: new Date().getTime() + 86400000,
+                        endDateTime: new Date().getTime() + 86400000 + 14400000
+                    }
+                ],
+                description: 'Join us for an amazing outdoor music festival featuring local and touring artists. More info at https://musicfest.com',
+                address: {
+                    line1: 'Riverside Park',
+                    line2: '123 Festival Ave'
+                },
+                imageUri: 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=400&h=400&fit=crop',
+                buttons: {
+                    single: {
+                        id: 'buy-tickets',
+                        text: 'Buy Tickets',
+                        icon: 'star',
+                        style: 'primary'
+                    }
+                }
+            },
+            imageOnly: {
+                name: 'Food Truck Rally',
+                layout: 'image-only',
+                dateTimes: [
+                    {
+                        startDateTime: new Date().getTime() + 172800000,
+                        endDateTime: new Date().getTime() + 172800000 + 18000000
+                    }
+                ],
+                description: 'The best food trucks in the city gather for one epic weekend. Come hungry!',
+                address: {
+                    line1: 'Downtown Plaza',
+                    line2: '456 Main Street'
+                },
+                imageUri: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=400&fit=crop',
+                buttons: {
+                    dual: [
+                        {
+                            id: 'directions',
+                            text: 'Get Directions',
+                            icon: 'map',
+                            style: 'primary'
+                        },
+                        {
+                            id: 'rsvp',
+                            text: 'RSVP Free',
+                            icon: 'rsvp',
+                            style: 'success'
+                        }
+                    ]
+                }
+            },
+            textarea: {
+                name: 'Book Club Meeting',
+                layout: 'mixed',
+                dateTimes: [
+                    {
+                        startDateTime: new Date().getTime() + 259200000,
+                        endDateTime: new Date().getTime() + 259200000 + 7200000
+                    }
+                ],
+                description: 'Monthly book club discussion. This month we\'re reading "The Seven Husbands of Evelyn Hugo".',
+                address: {
+                    line1: 'Central Library',
+                    line2: '789 Book Street'
+                },
+                imageUri: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
+                enableTextArea: true,
+                textAreaPlaceholder: 'Share your thoughts about the book...',
+                textAreaValue: 'Really looking forward to discussing the character development in this one! Check out more reviews at https://goodreads.com',
+                buttons: {
+                    single: {
+                        id: 'join-discussion',
+                        text: 'Join Discussion',
+                        icon: 'heart',
+                        style: 'secondary'
+                    }
+                }
+            },
+            noImage: {
+                name: 'Tech Networking Happy Hour',
+                layout: 'mixed',
+                dateTimes: [
+                    {
+                        startDateTime: new Date().getTime() + 345600000,
+                        endDateTime: new Date().getTime() + 345600000 + 10800000
+                    }
+                ],
+                description: 'Casual networking for tech professionals. Great drinks, better conversations!',
+                address: {
+                    line1: 'The Tech Lounge',
+                    line2: '101 Innovation Way'
+                },
+                imageUri: null,
+                buttons: {
+                    dual: [
+                        {
+                            id: 'attend',
+                            text: 'I\'ll Attend',
+                            icon: 'rsvp',
+                            style: 'primary'
+                        },
+                        {
+                            id: 'share',
+                            text: 'Share Event',
+                            icon: 'external',
+                            style: 'secondary'
+                        }
+                    ]
+                }
+            }
+        };
+
+        function showMessage(type, message) {
+            var container = type === 'error' ? document.getElementById('errorContainer') : document.getElementById('successContainer');
+            container.innerHTML = '<div class="' + type + '-message">' + message + '</div>';
+            setTimeout(function() {
+                container.innerHTML = '';
+            }, 3000);
+        }
+
+        function loadExample(exampleKey) {
+            var example = examples[exampleKey];
+            if (example) {
+                document.getElementById('configEditor').value = JSON.stringify(example, null, 2);
+                renderPreview();
+            }
+        }
+
+        function renderPreview() {
+            var configText = document.getElementById('configEditor').value.trim();
+            var errorContainer = document.getElementById('errorContainer');
+            var successContainer = document.getElementById('successContainer');
+            var previewContainer = document.getElementById('previewContainer');
+            
+            // Clear previous messages
+            errorContainer.innerHTML = '';
+            successContainer.innerHTML = '';
+            
+            if (!configText) {
+                showMessage('error', 'Please enter a post configuration.');
+                return;
+            }
+            
+            try {
+                var postData = JSON.parse(configText);
+                
+                // Validate required fields
+                if (!postData.name) {
+                    throw new Error('Missing required field: name');
+                }
+                if (!postData.dateTimes || !Array.isArray(postData.dateTimes) || postData.dateTimes.length === 0) {
+                    throw new Error('Missing required field: dateTimes (must be an array with at least one item)');
+                }
+                if (!postData.address || !postData.address.line1) {
+                    throw new Error('Missing required field: address.line1');
+                }
+                
+                // Create the post
+                var post = createPost(postData, defaultConfig);
+                
+                // Clear and show preview
+                previewContainer.innerHTML = '';
+                previewContainer.appendChild(post);
+                
+                showMessage('success', 'Post widget rendered successfully!');
+                
+            } catch (error) {
+                showMessage('error', 'Configuration Error: ' + error.message);
+                previewContainer.innerHTML = '<p style="color: #cbd5e1;">Fix the configuration errors to see your widget preview.</p>';
+            }
+        }
+
+        function clearPreview() {
+            document.getElementById('configEditor').value = '';
+            document.getElementById('previewContainer').innerHTML = '<p style="color: #cbd5e1;">Enter a post configuration above and click "Render Preview" to see your widget!</p>';
+            document.getElementById('errorContainer').innerHTML = '';
+            document.getElementById('successContainer').innerHTML = '';
+        }
+
+        // Load a default example on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadExample('basic');
+        });
+    </script>
+</body>
+</html>

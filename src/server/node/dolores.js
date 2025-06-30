@@ -346,4 +346,24 @@ console.warn(err);
   }    
 });
 
+// Serve form widget JavaScript
+app.get('/post-widget.js', (req, res) => {
+  const widgetCode = fs.readFileSync(path.join(process.cwd(), 'dolores/public/post-widget.js'), 'utf8');
+  res.setHeader('Content-Type', 'application/javascript');
+  res.send(widgetCode);
+});
+
+// Serve form widget CSS
+app.get('/post-widget.css', (req, res) => {
+  const widgetCSS = fs.readFileSync(path.join(process.cwd(), 'dolores/public/post-widget.css'), 'utf8');
+  res.setHeader('Content-Type', 'text/css');
+  res.send(widgetCSS);
+});
+
+app.get('/post-docs.html', (req, res) => {
+  const docsHTML = fs.readFileSync(path.join(process.cwd(), 'dolores/public/post-docs.html'), 'utf8');
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.send(docsHTML);
+});
+
 app.listen(3007);
