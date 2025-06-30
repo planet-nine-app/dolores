@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 import { Readable } from 'stream';
 import express from 'express';
 import cors from 'cors';
@@ -360,8 +361,8 @@ app.get('/post-widget.css', (req, res) => {
   res.send(widgetCSS);
 });
 
-app.get('/post-docs.html', (req, res) => {
-  const docsHTML = fs.readFileSync(path.join(process.cwd(), 'dolores/public/post-docs.html'), 'utf8');
+app.get('/post-widget-docs.html', (req, res) => {
+  const docsHTML = fs.readFileSync(path.join(process.cwd(), 'dolores/public/post-widget-docs.html'), 'utf8');
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.send(docsHTML);
 });
