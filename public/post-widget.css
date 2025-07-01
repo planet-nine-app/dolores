@@ -41,6 +41,33 @@ body {
     gap: var(--section-gap, 12px);
 }
 
+/* NEW: Spacer component - fills available space and pushes content to bottom */
+.post-spacer {
+    flex: 1;
+    min-height: var(--spacer-min-height, 0);
+    max-height: var(--spacer-max-height, none);
+    background: var(--spacer-bg, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: var(--spacer-visibility, visible);
+}
+
+/* Optional: Add visual indicator for spacer during development/debugging */
+.post-spacer.debug {
+    background: rgba(255, 0, 0, 0.1);
+    border: 1px dashed rgba(255, 0, 0, 0.3);
+    position: relative;
+}
+
+.post-spacer.debug::after {
+    content: 'SPACER';
+    font-size: 10px;
+    color: rgba(255, 0, 0, 0.5);
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
 .post-top-section {
     display: flex;
     gap: var(--section-gap, 12px);
@@ -209,27 +236,63 @@ body {
 }
 
 .post-datetime-container {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
     margin-bottom: var(--text-gap, 8px);
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color, #e5e5e5) transparent;
+}
+
+.post-datetime-container::-webkit-scrollbar {
+    height: 4px;
+}
+
+.post-datetime-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.post-datetime-container::-webkit-scrollbar-thumb {
+    background: var(--border-color, #e5e5e5);
+    border-radius: 2px;
+}
+
+.post-datetime-scroll {
+    display: flex;
+    gap: var(--section-gap, 12px);
+    padding: 2px 0;
+    min-width: fit-content;
 }
 
 .post-datetime {
-    font-size: var(--datetime-font-size, 14px);
+    font-size: var(--datetime-font-size, 12px);
     font-weight: var(--datetime-font-weight, 500);
-    line-height: var(--datetime-line-height, 18px);
-    color: var(--text-accent, #2563eb);
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    line-height: var(--datetime-line-height, 16px);
+    color: var(--text-secondary, #666666);
     cursor: pointer;
     transition: opacity 0.2s ease;
-    padding: 2px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: fit-content;
+    flex-shrink: 0;
 }
 
 .post-datetime:hover {
     opacity: 0.8;
+}
+
+.post-datetime-day-date {
+    font-weight: 600;
+    text-decoration: underline;
+    white-space: nowrap;
+    color: var(--text-secondary, #666666);
+    text-align: left;
+}
+
+.post-datetime-time {
+    font-weight: 400;
+    color: var(--text-secondary, #666666);
+    white-space: nowrap;
+    text-align: left;
 }
 
 .clock-icon {
@@ -265,10 +328,27 @@ body {
     color: var(--text-secondary, #666666);
     cursor: pointer;
     transition: color 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
 .post-address:hover {
     color: var(--text-accent, #2563eb);
+}
+
+.post-address-line1,
+.post-address-line2 {
+    text-decoration: underline;
+    word-wrap: break-word;
+}
+
+.post-address-line1 {
+    font-weight: 500;
+}
+
+.post-address-line2 {
+    font-weight: 400;
 }
 
 .post-textarea-container {
