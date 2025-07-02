@@ -25,7 +25,11 @@ class PostWidget {
         this.elements.postCard = this.createElement('div', 'post-card');
         this.elements.postContent = this.createElement('div', 'post-content');
         
+        // Create top section for image and description horizontal scrolling
+        this.elements.postTopSection = this.createElement('div', 'post-top-section');
+        
         this.elements.postCard.appendChild(this.elements.postContent);
+        this.elements.postContent.appendChild(this.elements.postTopSection);
         this.container.appendChild(this.elements.postCard);
     }
 
@@ -138,9 +142,56 @@ class PostWidget {
                 element.textContent = content;
                 break;
 
+            case 'image':
+                // Handle image in top section
+                const layout = config.layout || 'mixed'; // 'mixed', 'image-only', 'full'
+                
+                if (layout === 'image-only') {
+                    this.elements.postTopSection.classList.add('image-only');
+                    element = this.createElement('div', 'post-image-full');
+                } else {
+                    element = this.createElement('div', 'post-image');
+                }
+                
+                if (content) {
+                    const img = document.createElement('img');
+                    img.src = content;
+                    img.alt = config.alt || 'Event Image';
+                    img.onerror = () => {
+                        element.innerHTML = '<div class="image-error">Failed to load image</div>';
+                    };
+                    img.onload = () => {
+                        element.innerHTML = '';
+                        element.appendChild(img);
+                    };
+                    element.innerHTML = '<div class="image-loading">Loading...</div>';
+                    element.appendChild(img);
+                } else {
+                    element.innerHTML = '<div class="placeholder">No image</div>';
+                }
+                
+                // Add to top section
+                this.elements.postTopSection.appendChild(element);
+                return element;
+
             case 'description':
-                element = this.createElement('div', 'post-description');
-                element.textContent = content;
+                // Check if this should go in top section or as standalone
+                const inTopSection = config.inTopSection !== false; // default true
+                
+                if (inTopSection && this.elements.postTopSection) {
+                    // Create description container for top section
+                    element = this.createElement('div', 'post-description-container');
+                    const description = this.createElement('div', 'post-description');
+                    description.textContent = content;
+                    element.appendChild(description);
+                    
+                    // Add to top section
+                    this.elements.postTopSection.appendChild(element);
+                } else {
+                    // Standalone description
+                    element = this.createElement('div', 'post-description');
+                    element.textContent = content;
+                }
                 break;
 
             case 'datetime':
@@ -236,7 +287,7 @@ class PostWidget {
                 return null;
         }
 
-        if (element) {
+        if (element && type !== 'image' && (type !== 'description' || config.inTopSection === false)) {
             this.elements.postContent.appendChild(element);
         }
 
@@ -323,9 +374,21 @@ class PostWidgetBuilder {
         return this;
     }
 
-    description(text) {
-        this.widget.addElement('description', text);
+    // Add image to top section
+    image(imageUrl, config = {}) {
+        this.widget.addElement('image', imageUrl, config);
         return this;
+    }
+
+    // Description - can go in top section (default) or standalone
+    description(text, config = {}) {
+        this.widget.addElement('description', text, config);
+        return this;
+    }
+
+    // Standalone description (not in top section)
+    standaloneDescription(text) {
+        return this.description(text, { inTopSection: false });
     }
 
     // Updated datetime method to handle new format
@@ -369,11 +432,12 @@ class PostWidgetBuilder {
 
 // Example usage:
 /*
-// Basic usage with new datetime and address formats
+// Basic usage with image and description in top section (horizontal scroll)
 const container = document.getElementById('post-container');
 const post = new PostWidgetBuilder(container, { debug: true })
+    .image('https://example.com/event-image.jpg')
+    .description('Event description goes here in the top section...')
     .name('Event Title')
-    .description('Event description goes here...')
     .datetime([
         { day: 'Monday', date: '12/25', time: '7:00pm-11:00pm' },
         { day: 'Tuesday', date: '12/26', time: '6:00pm-10:00pm' }
@@ -389,20 +453,22 @@ const post = new PostWidgetBuilder(container, { debug: true })
     .button('Register Now')
     .build();
 
-// Single datetime example
-const singleDatePost = new PostWidgetBuilder(container)
-    .name('Single Date Event')
-    .description('Event description')
+// Image-only layout (full width image)
+const imageOnlyPost = new PostWidgetBuilder(container)
+    .image('https://example.com/banner.jpg', { layout: 'image-only' })
+    .name('Full Width Image Event')
+    .standaloneDescription('Description below the image')
     .singleDatetime('Friday', '01/15', '8:00pm-11:30pm')
-    .spacer({ debug: true })
-    .address('456 Oak Ave, Portland, OR 97201') // String format still works
+    .spacer()
+    .address('456 Oak Ave, Portland, OR 97201')
     .button('Buy Tickets')
     .build();
 
-// Multiple datetimes with scrolling
-const multiDatePost = new PostWidgetBuilder(container)
-    .name('Multi-Day Conference')
-    .description('A comprehensive conference spanning multiple days')
+// Mixed layout with image and description side by side
+const mixedPost = new PostWidgetBuilder(container)
+    .image('https://example.com/event.jpg', { layout: 'mixed' })
+    .description('This description will appear next to the image in a scrollable container')
+    .name('Mixed Layout Event')
     .multipleDatetimes([
         { day: 'Monday', date: '03/01', time: '9:00am-5:00pm' },
         { day: 'Tuesday', date: '03/02', time: '9:00am-5:00pm' },
@@ -419,10 +485,28 @@ const multiDatePost = new PostWidgetBuilder(container)
     .button('Register')
     .build();
 
-// Programmatic approach
+// No image, just description in top section
+const noImagePost = new PostWidgetBuilder(container)
+    .description('Just description in the top section without an image')
+    .name('Text-Only Event')
+    .datetime({ day: 'Saturday', date: '02/14', time: '7:00pm-12:00am' })
+    .spacer()
+    .address('321 Event Plaza, Eugene, OR 97401')
+    .button('Join Event')
+    .build();
+
+// Programmatic approach with multiple images/descriptions
 const widget = new PostWidget(container);
-widget.addElement('name', 'Test Event');
-widget.addElement('description', 'Description text');
+
+// Add image and description to top section
+widget.addElement('image', 'https://example.com/image1.jpg');
+widget.addElement('description', 'First description in top section');
+
+// Add main content
+widget.addElement('name', 'Multi-Section Event');
+
+// Add standalone description (not in top section)
+widget.addElement('description', 'This is a standalone description below', { inTopSection: false });
 
 // Add multiple datetimes
 widget.addElement('datetime', [
