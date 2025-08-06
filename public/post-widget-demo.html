@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Component</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .post-card {
+            width: 356px;
+            height: 506px;
+            background: var(--bg-color, #ffffff);
+            border-radius: var(--container-border-radius, 12px);
+            box-shadow: var(--container-shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
+            border: 1px solid var(--border-color, #e5e5e5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+        }
+
+        .post-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px var(--shadow-color, rgba(0, 0, 0, 0.15));
+        }
+
+        .post-content {
+            padding: var(--container-padding, 16px);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            gap: var(--section-gap, 12px);
+        }
+
+        .post-top-section {
+            display: flex;
+            gap: var(--section-gap, 12px);
+            height: 268px;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-color, #e5e5e5) transparent;
+        }
+
+        .post-top-section::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .post-top-section::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .post-top-section::-webkit-scrollbar-thumb {
+            background: var(--border-color, #e5e5e5);
+            border-radius: 2px;
+        }
+
+        /* Image-only layout */
+        .post-top-section.image-only {
+            height: auto;
+            overflow: visible;
+        }
+
+        .post-image-full {
+            width: 100%;
+            height: 200px;
+            background: var(--border-color, #e5e5e5);
+            border-radius: var(--image-border-radius, 8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            padding: var(--image-padding, 4px);
+        }
+
+        .post-image-full img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: calc(var(--image-border-radius, 8px) - var(--image-padding, 4px));
+            transition: transform 0.3s ease;
+        }
+
+        .post-image-full:hover img {
+            transform: scale(1.02);
+        }
+
+        .post-image-full .placeholder,
+        .post-image-full .image-loading,
+        .post-image-full .image-error {
+            color: var(--text-secondary, #666666);
+            font-size: 14px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .post-image {
+            width: 268px;
+            height: 268px;
+            background: var(--border-color, #e5e5e5);
+            border-radius: var(--image-border-radius, 8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            overflow: hidden;
+            position: relative;
+            padding: var(--image-padding, 4px);
+        }
+
+        .post-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: calc(var(--image-border-radius, 8px) - var(--image-padding, 4px));
+            transition: transform 0.3s ease;
+        }
+
+        .post-image:hover img {
+            transform: scale(1.02);
+        }
+
+        .post-image .placeholder {
+            color: var(--text-secondary, #666666);
+            font-size: 14px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .post-image .image-loading {
+            color: var(--text-secondary, #666666);
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .post-image .image-error {
+            color: var(--text-secondary, #666666);
+            font-size: 12px;
+            text-align: center;
+            padding: 20px;
+            line-height: 1.4;
+        }
+
+        .post-description-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 300px;
+            width: 300px;
+        }
+
+        .post-description {
+            font-size: var(--description-font-size, 14px);
+            font-weight: var(--description-font-weight, 400);
+            line-height: var(--description-line-height, 20px);
+            color: var(--text-secondary, #666666);
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: var(--text-gap, 8px);
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-color, #e5e5e5) transparent;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .post-description::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .post-description::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .post-description::-webkit-scrollbar-thumb {
+            background: var(--border-color, #e5e5e5);
+            border-radius: 2px;
+        }
+
+        .post-description a {
+            color: var(--text-accent, #2563eb);
+            text-decoration: underline;
+        }
+
+        .post-description a:hover {
+            text-decoration: none;
+        }
+
+        .post-name {
+            font-size: var(--name-font-size, 18px);
+            font-weight: var(--name-font-weight, 600);
+            line-height: var(--name-line-height, 24px);
+            color: var(--text-primary, #1a1a1a);
+            margin-bottom: var(--text-gap, 8px);
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .post-name:hover {
+            color: var(--text-accent, #2563eb);
+        }
+
+        .post-datetime-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: var(--text-gap, 8px);
+        }
+
+        .post-datetime {
+            font-size: var(--datetime-font-size, 14px);
+            font-weight: var(--datetime-font-weight, 500);
+            line-height: var(--datetime-line-height, 18px);
+            color: var(--text-accent, #2563eb);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+            padding: 2px 0;
+        }
+
+        .post-datetime:hover {
+            opacity: 0.8;
+        }
+
+        .clock-icon {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+        }
+
+        .location-icon {
+            width: 12px;
+            height: 12px;
+            flex-shrink: 0;
+            margin-right: 4px;
+        }
+
+        .post-address-container {
+            margin-top: auto;
+            padding-top: var(--text-gap, 8px);
+            border-top: 1px solid var(--border-color, #e5e5e5);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .post-address-text {
+            flex: 1;
+        }
+
+        .post-address {
+            font-size: var(--address-font-size, 12px);
+            font-weight: var(--address-font-weight, 400);
+            line-height: var(--address-line-height, 16px);
+            color: var(--text-secondary, #666666);
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .post-address:hover {
+            color: var(--text-accent, #2563eb);
+        }
+
+        .post-textarea-container {
+            margin-bottom: var(--text-gap, 8px);
+        }
+
+        .post-textarea {
+            width: 100%;
+            min-height: 80px;
+            max-height: 120px;
+            padding: 12px;
+            border: 1px solid var(--border-color, #e5e5e5);
+            border-radius: var(--image-border-radius, 8px);
+            background: var(--bg-color, #ffffff);
+            color: var(--text-primary, #1a1a1a);
+            font-family: inherit;
+            font-size: var(--description-font-size, 14px);
+            line-height: var(--description-line-height, 20px);
+            resize: vertical;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-color, #e5e5e5) transparent;
+        }
+
+        .post-textarea::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .post-textarea::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .post-textarea::-webkit-scrollbar-thumb {
+            background: var(--border-color, #e5e5e5);
+            border-radius: 2px;
+        }
+
+        .post-textarea:focus {
+            outline: none;
+            border-color: var(--text-accent, #2563eb);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .post-textarea::placeholder {
+            color: var(--text-secondary, #666666);
+        }
+
+        .post-textarea-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 4px;
+            font-size: 12px;
+            color: var(--text-secondary, #666666);
+        }
+
+        .post-textarea-char-count {
+            transition: color 0.2s ease;
+        }
+
+        .post-textarea-char-count.warning {
+            color: #f59e0b;
+        }
+
+        .post-textarea-char-count.error {
+            color: #ef4444;
+        }
+
+        .post-textarea-preview {
+            margin-top: 8px;
+            padding: 8px 12px;
+            background: var(--border-color, #e5e5e5);
+            border-radius: var(--image-border-radius, 8px);
+            font-size: var(--description-font-size, 14px);
+            line-height: var(--description-line-height, 20px);
+            color: var(--text-secondary, #666666);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .post-textarea-preview a {
+            color: var(--text-accent, #2563eb);
+            text-decoration: underline;
+        }
+
+        .post-textarea-preview a:hover {
+            text-decoration: none;
+        }
+
+        /* Button Components */
+        .post-buttons-container {
+            margin-bottom: var(--text-gap, 8px);
+        }
+
+        .post-button {
+            border: none;
+            border-radius: var(--image-border-radius, 8px);
+            font-family: inherit;
+            font-size: var(--description-font-size, 14px);
+            font-weight: 600;
+            line-height: 1;
+            padding: 14px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 48px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .post-button:active {
+            transform: translateY(-1px);
+        }
+
+        .post-button-icon {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        /* Single button - full width */
+        .post-button-single {
+            width: 100%;
+            background: linear-gradient(135deg, var(--text-accent, #2563eb) 0%, #7c3aed 100%);
+            color: white;
+        }
+
+        .post-button-single:hover {
+            background: linear-gradient(135deg, #1d4ed8 0%, #6d28d9 100%);
+        }
+
+        /* Two buttons side-by-side */
+        .post-buttons-dual {
+            display: flex;
+            gap: var(--section-gap, 12px);
+        }
+
+        .post-button-dual {
+            flex: 1;
+            color: white;
+        }
+
+        .post-button-primary {
+            background: linear-gradient(135deg, var(--text-accent, #2563eb) 0%, #7c3aed 100%);
+        }
+
+        .post-button-primary:hover {
+            background: linear-gradient(135deg, #1d4ed8 0%, #6d28d9 100%);
+        }
+
+        .post-button-secondary {
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+        }
+
+        .post-button-secondary:hover {
+            background: linear-gradient(135deg, #475569 0%, #334155 100%);
+        }
+
+        /* Alternative gradient styles */
+        .post-button-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .post-button-success:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        }
+
+        .post-button-warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .post-button-warning:hover {
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+        }
+
+        .post-button-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .post-button-danger:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        }
+
+        /* Outline button variant */
+        .post-button-outline {
+            background: transparent;
+            border: 2px solid var(--text-accent, #2563eb);
+            color: var(--text-accent, #2563eb);
+        }
+
+        .post-button-outline:hover {
+            background: var(--text-accent, #2563eb);
+            color: white;
+        }
+
+        .post-share-button {
+            background: var(--text-accent, #2563eb);
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: white;
+            margin-left: 8px;
+            flex-shrink: 0;
+        }
+
+        .post-share-button:hover {
+            background: var(--text-primary, #1a1a1a);
+            transform: scale(1.1);
+        }
+
+        .share-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Theme variants */
+        .post-card.dark-theme {
+            --bg-color: #1f1f1f;
+            --text-primary: #ffffff;
+            --text-secondary: #a3a3a3;
+            --text-accent: #60a5fa;
+            --border-color: #404040;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div id="post-container"></div>
+
+    <script>
+        // Default configuration
+        var defaultConfig = {
+            colors: {
+                background: '#ffffff',
+                text: {
+                    primary: '#1a1a1a',
+                    secondary: '#666666',
+                    accent: '#2563eb'
+                },
+                border: '#e5e5e5',
+                shadow: 'rgba(0, 0, 0, 0.1)'
+            },
+            typography: {
+                name: {
+                    fontSize: '18px',
+                    fontWeight: '600',
+                    lineHeight: '24px'
+                },
+                description: {
+                    fontSize: '14px',
+                    fontWeight: '400',
+                    lineHeight: '20px'
+                },
+                dateTime: {
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    lineHeight: '18px'
+                },
+                address: {
+                    fontSize: '12px',
+                    fontWeight: '400',
+                    lineHeight: '16px'
+                }
+            },
+            spacing: {
+                containerPadding: '16px',
+                sectionGap: '12px',
+                textGap: '8px',
+                imagePadding: '4px',
+                imageBorderRadius: '8px',
+                containerBorderRadius: '12px'
+            },
+            shadows: {
+                container: '0 2px 8px rgba(0, 0, 0, 0.1)'
+            }
+        };
+
+        // SVG Icons
+        var icons = {
+            clock: '<svg class="clock-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><polyline points="12,6 12,12 16,14" stroke="currentColor" stroke-width="2"/></svg>',
+            location: '<svg class="location-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/></svg>',
+            share: '<svg class="share-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" stroke="currentColor" stroke-width="2"/><polyline points="16,6 12,2 8,6" stroke="currentColor" stroke-width="2"/><line x1="12" y1="2" x2="12" y2="15" stroke="currentColor" stroke-width="2"/></svg>',
+            calendar: '<svg class="post-button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" stroke-width="2"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2"/></svg>',
+            map: '<svg class="post-button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="1,6 1,22 8,18 16,22 23,18 23,2 16,6 8,2" stroke="currentColor" stroke-width="2" fill="none"/><line x1="8" y1="2" x2="8" y2="18" stroke="currentColor" stroke-width="2"/><line x1="16" y1="6" x2="16" y2="22" stroke="currentColor" stroke-width="2"/></svg>',
+            star: '<svg class="post-button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" stroke="currentColor" stroke-width="2"/></svg>',
+            heart: '<svg class="post-button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" stroke-width="2"/></svg>',
+            external: '<svg class="post-button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" stroke="currentColor" stroke-width="2"/><polyline points="15,3 21,3 21,9" stroke="currentColor" stroke-width="2"/><line x1="10" y1="14" x2="21" y2="3" stroke="currentColor" stroke-width="2"/></svg>',
+            rsvp: '<svg class="post-button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/><circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2"/><polyline points="17,11 19,13 23,9" stroke="currentColor" stroke-width="2"/></svg>'
+        };
+
+        // Utility functions
+        function formatDateTime(startDateTime, endDateTime) {
+            var start = new Date(startDateTime);
+            var end = new Date(endDateTime);
+            
+            function formatTime(date) {
+                return date.toLocaleTimeString('en-US', {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
+                });
+            }
+            
+            function formatDate(date) {
+                return date.toLocaleDateString('en-US', {
+                    weekday: 'short',
+                    month: 'short',
+                    day: 'numeric'
+                });
+            }
+            
+            var isSameDay = start.toDateString() === end.toDateString();
+            
+            if (isSameDay) {
+                return formatDate(start) + ' • ' + formatTime(start) + ' - ' + formatTime(end);
+            } else {
+                return formatDate(start) + ' ' + formatTime(start) + ' - ' + formatDate(end) + ' ' + formatTime(end);
+            }
+        }
+
+        function linkifyText(text) {
+            // Simple URL detection for https:// links
+            var urlRegex = /(https:\/\/[^\s]+)/g;
+            return text.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
+        }
+
+        function applyCSSVariables(element, config) {
+            var style = element.style;
+            
+            // Colors
+            style.setProperty('--bg-color', config.colors.background);
+            style.setProperty('--text-primary', config.colors.text.primary);
+            style.setProperty('--text-secondary', config.colors.text.secondary);
+            style.setProperty('--text-accent', config.colors.text.accent);
+            style.setProperty('--border-color', config.colors.border);
+            style.setProperty('--shadow-color', config.colors.shadow);
+            
+            // Typography
+            style.setProperty('--name-font-size', config.typography.name.fontSize);
+            style.setProperty('--name-font-weight', config.typography.name.fontWeight);
+            style.setProperty('--name-line-height', config.typography.name.lineHeight);
+            
+            style.setProperty('--description-font-size', config.typography.description.fontSize);
+            style.setProperty('--description-font-weight', config.typography.description.fontWeight);
+            style.setProperty('--description-line-height', config.typography.description.lineHeight);
+            
+            style.setProperty('--datetime-font-size', config.typography.dateTime.fontSize);
+            style.setProperty('--datetime-font-weight', config.typography.dateTime.fontWeight);
+            style.setProperty('--datetime-line-height', config.typography.dateTime.lineHeight);
+            
+            style.setProperty('--address-font-size', config.typography.address.fontSize);
+            style.setProperty('--address-font-weight', config.typography.address.fontWeight);
+            style.setProperty('--address-line-height', config.typography.address.lineHeight);
+            
+            // Spacing
+            style.setProperty('--container-padding', config.spacing.containerPadding);
+            style.setProperty('--section-gap', config.spacing.sectionGap);
+            style.setProperty('--text-gap', config.spacing.textGap);
+            style.setProperty('--image-padding', config.spacing.imagePadding);
+            style.setProperty('--image-border-radius', config.spacing.imageBorderRadius);
+            style.setProperty('--container-border-radius', config.spacing.containerBorderRadius);
+            
+            // Shadows
+            style.setProperty('--container-shadow', config.shadows.container);
+        }
+
+        // Image handling function
+        function createImageElement(imageUri, imageId, onImageLoad, onImageError) {
+            if (imageUri) {
+                // Direct URI provided
+                var img = document.createElement('img');
+                img.src = imageUri;
+                img.alt = 'Post image';
+                
+                img.onload = function() {
+                    if (onImageLoad) onImageLoad(img);
+                };
+                
+                img.onerror = function() {
+                    if (onImageError) onImageError(img);
+                };
+                
+                return img;
+            } else if (imageId) {
+                // Legacy imageId support
+                var img = document.createElement('img');
+                img.src = '/images/' + imageId;
+                img.alt = 'Post image';
+                
+                img.onload = function() {
+                    if (onImageLoad) onImageLoad(img);
+                };
+                
+                img.onerror = function() {
+                    if (onImageError) onImageError(img);
+                };
+                
+                return img;
+            } else {
+                // No image
+                var placeholder = document.createElement('div');
+                placeholder.className = 'placeholder';
+                placeholder.textContent = 'No Image';
+                return placeholder;
+            }
+        }
+
+        // Button creation functions
+        function createButtonHtml(button) {
+            var iconHtml = button.icon && icons[button.icon] ? icons[button.icon] : '';
+            var buttonClasses = 'post-button';
+            
+            if (button.type === 'single') {
+                buttonClasses += ' post-button-single';
+            } else {
+                buttonClasses += ' post-button-dual';
+                if (button.style) {
+                    buttonClasses += ' post-button-' + button.style;
+                } else {
+                    buttonClasses += ' post-button-primary';
+                }
+            }
+            
+            return '<button class="' + buttonClasses + '" data-button-id="' + (button.id || '') + '">' +
+                iconHtml + 
+                '<span>' + button.text + '</span>' +
+                '</button>';
+        }
+
+        function createButtonsSection(buttonsConfig) {
+            if (!buttonsConfig) return '';
+            
+            var html = '<div class="post-buttons-container">';
+            
+            if (buttonsConfig.single) {
+                // Single full-width button
+                html += createButtonHtml({
+                    ...buttonsConfig.single,
+                    type: 'single'
+                });
+            }
+            
+            if (buttonsConfig.dual && buttonsConfig.dual.length === 2) {
+                // Two buttons side-by-side
+                html += '<div class="post-buttons-dual">';
+                buttonsConfig.dual.forEach(function(button) {
+                    html += createButtonHtml({
+                        ...button,
+                        type: 'dual'
+                    });
+                });
+                html += '</div>';
+            }
+            
+            html += '</div>';
+            return html;
+        }
+
+        function createPost(postData, config, onPostClick, onNameClick, onDateTimeClick, onAddressClick, onShareClick, onButtonClick) {
+            config = config || defaultConfig;
+            onPostClick = onPostClick || null;
+            onNameClick = onNameClick || function() { alert('Name clicked: ' + postData.name); };
+            onDateTimeClick = onDateTimeClick || function(dateTime) { alert('DateTime clicked: ' + formatDateTime(dateTime.startDateTime, dateTime.endDateTime)); };
+            onAddressClick = onAddressClick || function() { alert('Address clicked: ' + postData.address.line1 + ', ' + postData.address.line2); };
+            onShareClick = onShareClick || function() { alert('Share clicked for: ' + postData.name); };
+            onButtonClick = onButtonClick || function(buttonId, buttonText) { alert('Button clicked: ' + buttonText + ' (' + buttonId + ')'); };
+            
+            var postCard = document.createElement('div');
+            postCard.className = 'post-card';
+            
+            // Apply configuration
+            applyCSSVariables(postCard, config);
+            
+            var dateTimeHtml = '';
+            for (var i = 0; i < postData.dateTimes.length; i++) {
+                dateTimeHtml += '<div class="post-datetime" data-datetime-index="' + i + '">' +
+                    icons.clock +
+                    formatDateTime(postData.dateTimes[i].startDateTime, postData.dateTimes[i].endDateTime) +
+                    '</div>';
+            }
+            
+            var linkedDescription = linkifyText(postData.description);
+            
+            // Determine layout type
+            var isImageOnly = postData.layout === 'image-only';
+            var topSectionClass = isImageOnly ? 'post-top-section image-only' : 'post-top-section';
+            var imageClass = isImageOnly ? 'post-image-full' : 'post-image';
+            
+            var topSectionContent = '';
+            if (isImageOnly) {
+                // Image-only layout
+                topSectionContent = '<div class="' + imageClass + '" id="image-container-' + Math.random().toString(36).substr(2, 9) + '">' +
+                    '<div class="image-loading">Loading...</div>' +
+                '</div>';
+            } else {
+                // Mixed layout (image + description)
+                topSectionContent = '<div class="' + imageClass + '" id="image-container-' + Math.random().toString(36).substr(2, 9) + '">' +
+                    '<div class="image-loading">Loading...</div>' +
+                '</div>' +
+                '<div class="post-description-container">' +
+                    '<div class="post-description">' + linkedDescription + '</div>' +
+                '</div>';
+            }
+            
+            var descriptionSection = '';
+            if (isImageOnly && postData.description) {
+                // For image-only layout, put description below the image
+                descriptionSection = '<div class="post-description" style="margin-bottom: var(--text-gap, 8px);">' + linkedDescription + '</div>';
+            }
+            
+            // Textarea section
+            var textareaSection = '';
+            if (postData.enableTextArea) {
+                var textareaValue = postData.textAreaValue || '';
+                var placeholderText = postData.textAreaPlaceholder || 'Share your thoughts...';
+                textareaSection = 
+                    '<div class="post-textarea-container">' +
+                        '<textarea class="post-textarea" placeholder="' + placeholderText + '" maxlength="500">' + textareaValue + '</textarea>' +
+                        '<div class="post-textarea-info">' +
+                            '<span>Links will be automatically detected</span>' +
+                            '<span class="post-textarea-char-count">0/500</span>' +
+                        '</div>' +
+                        '<div class="post-textarea-preview" style="display: none;"></div>' +
+                    '</div>';
+            }
+            
+            // Buttons section
+            var buttonsSection = createButtonsSection(postData.buttons);
+            
+            postCard.innerHTML = 
+                '<div class="post-content">' +
+                    '<div class="' + topSectionClass + '">' +
+                        topSectionContent +
+                    '</div>' +
+                    descriptionSection +
+                    textareaSection +
+                    buttonsSection +
+                    '<div class="post-name">' + postData.name + '</div>' +
+                    '<div class="post-datetime-container">' +
+                        dateTimeHtml +
+                    '</div>' +
+                    '<div class="post-address-container">' +
+                        '<div class="post-address-text">' +
+                            '<div class="post-address post-address-line1">' +
+                                icons.location + postData.address.line1 +
+                            '</div>' +
+                            '<div class="post-address post-address-line2">' + postData.address.line2 + '</div>' +
+                        '</div>' +
+                        '<button class="post-share-button">' + icons.share + '</button>' +
+                    '</div>' +
+                '</div>';
+            
+            // Handle image loading
+            var imageContainer = postCard.querySelector('.' + imageClass);
+            var imageElement = createImageElement(
+                postData.imageUri,
+                postData.imageId,
+                function(img) {
+                    // Image loaded successfully
+                    imageContainer.innerHTML = '';
+                    imageContainer.appendChild(img);
+                },
+                function(img) {
+                    // Image failed to load
+                    imageContainer.innerHTML = '<div class="image-error">Image failed to load</div>';
+                }
+            );
+            
+            // If we have a placeholder (no image), show it immediately
+            if (imageElement.className === 'placeholder') {
+                imageContainer.innerHTML = '';
+                imageContainer.appendChild(imageElement);
+            }
+            
+            // Handle textarea functionality
+            var textarea = postCard.querySelector('.post-textarea');
+            if (textarea) {
+                var charCount = postCard.querySelector('.post-textarea-char-count');
+                var preview = postCard.querySelector('.post-textarea-preview');
+                
+                function updateTextarea() {
+                    var value = textarea.value;
+                    var length = value.length;
+                    
+                    // Update character count
+                    charCount.textContent = length + '/500';
+                    charCount.className = 'post-textarea-char-count';
+                    if (length > 450) {
+                        charCount.classList.add('warning');
+                    }
+                    if (length >= 500) {
+                        charCount.classList.add('error');
+                    }
+                    
+                    // Update preview with linkified text
+                    if (value.trim()) {
+                        preview.innerHTML = linkifyText(value);
+                        preview.style.display = 'block';
+                    } else {
+                        preview.style.display = 'none';
+                    }
+                }
+                
+                // Initial update
+                updateTextarea();
+                
+                // Add event listeners
+                textarea.addEventListener('input', updateTextarea);
+                textarea.addEventListener('paste', function() {
+                    setTimeout(updateTextarea, 10);
+                });
+            }
+            
+            // Handle button clicks
+            var buttons = postCard.querySelectorAll('.post-button');
+            buttons.forEach(function(button) {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var buttonId = button.getAttribute('data-button-id') || '';
+                    var buttonText = button.querySelector('span').textContent;
+                    onButtonClick(buttonId, buttonText, postData);
+                });
+            });
+            
+            // Add main post click handler
+            if (onPostClick) {
+                postCard.addEventListener('click', function(e) {
+                    // Don't trigger post click if clicking on interactive elements
+                    if (!e.target.closest('.post-name, .post-datetime, .post-address, .post-share-button, .post-description a')) {
+                        onPostClick(postData);
+                    }
+                });
+            }
+            
+            // Name click handler
+            var nameElement = postCard.querySelector('.post-name');
+            nameElement.addEventListener('click', function(e) {
+                e.stopPropagation();
+                onNameClick(postData);
+            });
+            
+            // DateTime click handlers
+            var dateTimeElements = postCard.querySelectorAll('.post-datetime');
+            for (var i = 0; i < dateTimeElements.length; i++) {
+                (function(index) {
+                    dateTimeElements[index].addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        onDateTimeClick(postData.dateTimes[index], postData);
+                    });
+                })(i);
+            }
+            
+            // Address click handlers
+            var addressElements = postCard.querySelectorAll('.post-address');
+            for (var i = 0; i < addressElements.length; i++) {
+                addressElements[i].addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    onAddressClick(postData);
+                });
+            }
+            
+            // Share click handler
+            var shareButton = postCard.querySelector('.post-share-button');
+            shareButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                onShareClick(postData);
+            });
+            
+            return postCard;
+        }
+
+        // Sample data with different layouts, textarea, and button examples
+        var samplePosts = [
+            {
+                name: 'Whit\'s Pizza Pies',
+                layout: 'mixed', // Default mixed layout (image + description side-by-side)
+                dateTimes: [
+                    {
+                        startDateTime: new Date().getTime() + 600000,
+                        endDateTime: new Date().getTime() + 660000
+                    }
+                ],
+                location: '',
+                description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Check out our website at https://example.com for more info! Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Visit https://another-site.com for updates. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.',
+                address: {
+                    line1: 'Alleyway Bar',
+                    line2: '123 N Alberta Ave'
+                },
+                imageUri: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&h=400&fit=crop',
+                enableTextArea: true,
+                textAreaPlaceholder: 'Tell us about your pizza preferences...',
+                textAreaValue: 'I love their pepperoni pizza! Check out the menu at https://whitspizza.com and follow them on https://twitter.com/whitspizza for daily specials.',
+                buttons: {
+                    single: {
+                        id: 'add-to-calendar',
+                        text: 'Add to Calendar',
+                        icon: 'calendar',
+                        style: 'primary'
+                    }
+                }
+            },
+            {
+                name: 'Downtown Food Truck Festival',
+                layout: 'image-only', // Full-width image layout
+                dateTimes: [
+                    {
+                        startDateTime: new Date().getTime() + 86400000,
+                        endDateTime: new Date().getTime() + 86400000 + 14400000
+                    }
+                ],
+                location: '',
+                description: 'Join us for an amazing food truck festival featuring the best local vendors. More details at https://foodtruckfest.com and follow us at https://twitter.com/foodtrucks for live updates!',
+                address: {
+                    line1: 'Pioneer Courthouse Square',
+                    line2: '701 SW 5th Ave'
+                },
+                imageUri: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=400&fit=crop',
+                enableTextArea: true,
+                textAreaPlaceholder: 'Share your food truck recommendations...',
+                textAreaValue: '',
+                buttons: {
+                    dual: [
+                        {
+                            id: 'get-directions',
+                            text: 'Get Directions',
+                            icon: 'map',
+                            style: 'primary'
+                        },
+                        {
+                            id: 'rsvp',
+                            text: 'RSVP',
+                            icon: 'rsvp',
+                            style: 'success'
+                        }
+                    ]
+                }
+            },
+            {
+                name: 'Coffee Meetup',
+                layout: 'mixed', // Mixed layout with no image
+                dateTimes: [
+                    {
+                        startDateTime: new Date().getTime() + 172800000,
+                        endDateTime: new Date().getTime() + 172800000 + 3600000
+                    }
+                ],
+                location: '',
+                description: 'A casual coffee meetup for local entrepreneurs and freelancers. No agenda, just good coffee and great conversation!',
+                address: {
+                    line1: 'Blue Bottle Coffee',
+                    line2: '1355 NW Everett St'
+                },
+                imageUri: null, // No image for this post
+                enableTextArea: false, // No textarea for this post
+                buttons: {
+                    dual: [
+                        {
+                            id: 'interested',
+                            text: 'I\'m Interested',
+                            icon: 'heart',
+                            style: 'secondary'
+                        },
+                        {
+                            id: 'share',
+                            text: 'Share Event',
+                            icon: 'external',
+                            style: 'secondary'
+                        }
+                    ]
+                }
+            },
+            {
+                name: 'Art Gallery Opening',
+                layout: 'image-only', // Image-only layout
+                dateTimes: [
+                    {
+                        startDateTime: new Date().getTime() + 259200000,
+                        endDateTime: new Date().getTime() + 259200000 + 7200000
+                    }
+                ],
+                location: '',
+                description: 'Contemporary art exhibition featuring local Portland artists. Wine and light refreshments will be served.',
+                address: {
+                    line1: 'Portland Art Museum',
+                    line2: '1219 SW Park Ave'
+                },
+                imageUri: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=400&fit=crop',
+                enableTextArea: true,
+                textAreaPlaceholder: 'What type of art interests you most?',
+                textAreaValue: 'Looking forward to seeing the contemporary pieces! More info at https://portlandartmuseum.org',
+                buttons: {
+                    single: {
+                        id: 'buy-tickets',
+                        text: 'Buy Tickets ($15)',
+                        icon: 'star',
+                        style: 'warning'
+                    }
+                }
+            }
+        ];
+
+        // Alternative theme configs
+        var darkConfig = {
+            colors: {
+                background: '#1f1f1f',
+                text: {
+                    primary: '#ffffff',
+                    secondary: '#a3a3a3',
+                    accent: '#60a5fa'
+                },
+                border: '#404040',
+                shadow: 'rgba(0, 0, 0, 0.3)'
+            },
+            typography: {
+                name: {
+                    fontSize: '18px',
+                    fontWeight: '600',
+                    lineHeight: '24px'
+                },
+                description: {
+                    fontSize: '14px',
+                    fontWeight: '400',
+                    lineHeight: '20px'
+                },
+                dateTime: {
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    lineHeight: '18px'
+                },
+                address: {
+                    fontSize: '12px',
+                    fontWeight: '400',
+                    lineHeight: '16px'
+                }
+            },
+            spacing: {
+                containerPadding: '16px',
+                sectionGap: '12px',
+                textGap: '8px',
+                imagePadding: '4px',
+                imageBorderRadius: '8px',
+                containerBorderRadius: '12px'
+            },
+            shadows: {
+                container: '0 2px 8px rgba(0, 0, 0, 0.1)'
+            }
+        };
+
+        var colorfulConfig = {
+            colors: {
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                text: {
+                    primary: '#ffffff',
+                    secondary: '#e2e8f0',
+                    accent: '#fbbf24'
+                },
+                border: 'rgba(255, 255, 255, 0.2)',
+                shadow: 'rgba(0, 0, 0, 0.2)'
+            },
+            typography: {
+                name: {
+                    fontSize: '18px',
+                    fontWeight: '600',
+                    lineHeight: '24px'
+                },
+                description: {
+                    fontSize: '14px',
+                    fontWeight: '400',
+                    lineHeight: '20px'
+                },
+                dateTime: {
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    lineHeight: '18px'
+                },
+                address: {
+                    fontSize: '12px',
+                    fontWeight: '400',
+                    lineHeight: '16px'
+                }
+            },
+            spacing: {
+                containerPadding: '16px',
+                sectionGap: '12px',
+                textGap: '8px',
+                imagePadding: '6px',
+                imageBorderRadius: '12px',
+                containerBorderRadius: '12px'
+            },
+            shadows: {
+                container: '0 2px 8px rgba(0, 0, 0, 0.1)'
+            }
+        };
+
+        // Initialize demo
+        function init() {
+            var container = document.getElementById('post-container');
+            
+            // Create posts with different themes and layouts
+            var post1 = createPost(
+                samplePosts[0], 
+                defaultConfig, 
+                function(post) { alert('Post clicked: ' + post.name); },
+                function(post) { alert('Name clicked: ' + post.name); },
+                function(dateTime, post) { alert('DateTime clicked: ' + formatDateTime(dateTime.startDateTime, dateTime.endDateTime)); },
+                function(post) { alert('Address clicked: ' + post.address.line1 + ', ' + post.address.line2); },
+                function(post) { alert('Share clicked for: ' + post.name); },
+                function(buttonId, buttonText, post) { alert('Button clicked: ' + buttonText + ' (ID: ' + buttonId + ') for ' + post.name); }
+            );
+            
+            var post2 = createPost(
+                samplePosts[1], 
+                defaultConfig, 
+                function(post) { alert('Post clicked: ' + post.name); },
+                function(post) { alert('Name clicked: ' + post.name); },
+                function(dateTime, post) { alert('DateTime clicked: ' + formatDateTime(dateTime.startDateTime, dateTime.endDateTime)); },
+                function(post) { alert('Address clicked: ' + post.address.line1 + ', ' + post.address.line2); },
+                function(post) { alert('Share clicked for: ' + post.name); },
+                function(buttonId, buttonText, post) { alert('Button clicked: ' + buttonText + ' (ID: ' + buttonId + ') for ' + post.name); }
+            );
+            
+            var post3 = createPost(
+                samplePosts[2], 
+                darkConfig, 
+                function(post) { alert('Post clicked: ' + post.name); },
+                function(post) { alert('Name clicked: ' + post.name); },
+                function(dateTime, post) { alert('DateTime clicked: ' + formatDateTime(dateTime.startDateTime, dateTime.endDateTime)); },
+                function(post) { alert('Address clicked: ' + post.address.line1 + ', ' + post.address.line2); },
+                function(post) { alert('Share clicked for: ' + post.name); },
+                function(buttonId, buttonText, post) { alert('Button clicked: ' + buttonText + ' (ID: ' + buttonId + ') for ' + post.name); }
+            );
+            
+            var post4 = createPost(
+                samplePosts[3], 
+                colorfulConfig, 
+                function(post) { alert('Post clicked: ' + post.name); },
+                function(post) { alert('Name clicked: ' + post.name); },
+                function(dateTime, post) { alert('DateTime clicked: ' + formatDateTime(dateTime.startDateTime, dateTime.endDateTime)); },
+                function(post) { alert('Address clicked: ' + post.address.line1 + ', ' + post.address.line2); },
+                function(post) { alert('Share clicked for: ' + post.name); },
+                function(buttonId, buttonText, post) { alert('Button clicked: ' + buttonText + ' (ID: ' + buttonId + ') for ' + post.name); }
+            );
+            
+            container.appendChild(post1);
+            container.appendChild(post2);
+            container.appendChild(post3);
+            container.appendChild(post4);
+        }
+
+        // Run when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+
+        // Utility function to get textarea value from a post
+        function getTextAreaValue(postElement) {
+            var textarea = postElement.querySelector('.post-textarea');
+            return textarea ? textarea.value : null;
+        }
+
+        // Export for use in Tauri
+        window.PostComponent = {
+            createPost: createPost,
+            defaultConfig: defaultConfig,
+            icons: icons,
+            formatDateTime: formatDateTime,
+            applyCSSVariables: applyCSSVariables,
+            linkifyText: linkifyText,
+            createImageElement: createImageElement,
+            getTextAreaValue: getTextAreaValue,
+            createButtonHtml: createButtonHtml,
+            createButtonsSection: createButtonsSection
+        };
+    </script>
+</body>
+</html>
