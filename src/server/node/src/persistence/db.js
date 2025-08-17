@@ -1,7 +1,9 @@
 import { createClient } from './client.js';
 import sessionless from 'sessionless-node';
 
-const PROTOCOLS = ['at-protocol'];
+const MAX_POSTS = 99; // This will be configurable eventually
+const POSTS_DIR = 'local-posts';
+const PROTOCOLS = ['at-protocol', POSTS_DIR];
   
 const client = await createClient()
   .on('error', err => console.log('Client Error', err))
@@ -77,6 +79,27 @@ console.log('throwing');
   getKeys: async () => {
     const keyString = await client.get('keys');
     return JSON.parse(keyString);
+  },
+
+  getPosts: async () => {
+    const postString = await client.get(POSTS_DIR) || '{"posts": []}';
+    const posts = JSON.parse(postString);
+
+    return posts;
+  },
+
+  savePost: async (post) => {
+    const postString = await client.get(POSTS_DIR) || '{"posts": []}';
+    let posts = JSON.parse(postString);
+
+    posts.posts.push(post);  
+    if(posts.length > MAX_POSTS) {
+      posts = posts.slice(1, MAX_POSTS);
+    }
+
+    await client.set(POSTS_DIR, JSON.stringify('posts'));
+
+    return posts;
   },
 
   saveFeeds: async (protocol, feeds) => {

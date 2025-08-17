@@ -42,8 +42,8 @@ app.options('*', (req, res) => {
 });
 
 const SUBDOMAIN = process.env.SUBDOMAIN || 'dev';
-fount.baseURL = process.env.LOCALHOST ? 'http://localhost:3006/' : `${SUBDOMAIN}.fount.allyabase.com/`;
-bdo.baseURL = process.env.LOCALHOST ? 'http://localhost:3003/' : `${SUBDOMAIN}.bdo.allyabase.com/`;
+fount.baseURL = process.env.LOCALHOST ? 'http://localhost:3006/' : `https://${SUBDOMAIN}.fount.allyabase.com/`;
+bdo.baseURL = process.env.LOCALHOST ? 'http://localhost:3003/' : `https://${SUBDOMAIN}.bdo.allyabase.com/`;
 const bdoHashInput = `${SUBDOMAIN}dolores`;
 
 const bdoHash = createHash('sha256').update(bdoHashInput).digest('hex');
@@ -134,6 +134,31 @@ app.get('/user/:uuid', async (req, res) => {
       res.status(403);
       return res.send({error: 'auth error'});
     }
+
+    res.send(foundUser);
+  } catch(err) {
+console.warn(err);
+    res.status(404);
+    res.send({error: 'not found'});
+  }
+});
+
+app.put('/user/:uuid/post', async (req, res) => {
+  try {
+    const uuid = req.params.uuid;
+    const timestamp = req.body.timestamp;
+    const post = req.body.post;
+    const signature = req.body.signature;
+    const message = timestamp + uuid;
+
+    const foundUser = await db.getUserByUUID(req.params.uuid);
+
+    if(!signature || !sessionless.verifySignature(signature, message, foundUser.pubKey)) {
+      res.status(403);
+      return res.send({error: 'auth error'});
+    }
+
+    await db.savePost(post);
 
     res.send(foundUser);
   } catch(err) {
@@ -367,4 +392,4 @@ app.get('/post-widget-docs.html', (req, res) => {
   res.send(docsHTML);
 });
 
-app.listen(3007);
+app.listen(process.env.PORT || 3005);

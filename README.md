@@ -149,6 +149,66 @@ TODO
 
 </details>
 
+<details>
+ <summary><code>PUT</code> <code><b>/user/:uuid/post</b></code> <code>Creates a new generic post for the authenticated user</code></summary>
+
+##### Parameters
+
+> | name         |  required     | data type               | description                                                           |
+> |--------------|-----------|-------------------------|-----------------------------------------------------------------------|
+> | post         |  true     | object                  | the post data to store  |
+> | timestamp    |  true     | string                  | in a production system timestamps prevent replay attacks  |
+> | signature    |  true     | string (signature)      | the signature from sessionless for the message  |
+
+
+##### Responses
+
+> | http code     | content-type                      | response                                                            |
+> |---------------|-----------------------------------|---------------------------------------------------------------------|
+> | `200`         | `application/json`                | `USER`   |
+> | `403`         | `application/json`                | `{"error":"auth error"}`                            |
+> | `404`         | `application/json`                | `{"error":"not found"}`                            |
+
+##### Example cURL
+
+> ```javascript
+>  curl -X PUT -H "Content-Type: application/json" -d '{"post": {"content": "Hello world!", "tags": ["general"]}, "timestamp": "1234567890", "signature": "sig"}' https://<placeholderURL>/user/<uuid>/post
+> ```
+
+##### Notes
+
+> **Implementation**: Uses the existing `savePost` function in the persistence layer to store posts in the local-posts collection with a maximum of 99 posts.
+
+</details>
+
+<details>
+ <summary><code>GET</code> <code><b>/user/:uuid/feed?timestamp=<timestamp>&signature=<signature>&tags=<tags></b></code> <code>Returns a feed of posts for the authenticated user</code></summary>
+
+##### Parameters
+
+> | name         |  required     | data type               | description                                                           |
+> |--------------|-----------|-------------------------|-----------------------------------------------------------------------|
+> | timestamp    |  true     | string                  | in a production system timestamps prevent replay attacks  |
+> | signature    |  true     | string (signature)      | the signature from sessionless for the message  |
+> | tags         |  false    | string                  | plus-separated tags to filter posts (e.g., "social+mybase")  |
+
+
+##### Responses
+
+> | http code     | content-type                      | response                                                            |
+> |---------------|-----------------------------------|---------------------------------------------------------------------|
+> | `200`         | `application/json`                | `FEED` (BlueSky posts and user content)   |
+> | `403`         | `application/json`                | `{"error":"auth error"}`                            |
+> | `404`         | `application/json`                | `{"error":"not found"}`                            |
+
+##### Example cURL
+
+> ```javascript
+>  curl -X GET -H "Content-Type: application/json" https://<placeholderURL>/user/<uuid>/feed?timestamp=123&signature=signature&tags=social+mybase
+> ```
+
+</details>
+
 
 
 [dolores]: https://en.wikipedia.org/wiki/Dolores_del_Río
