@@ -24,9 +24,9 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-  origin: '*', // Or specify allowed domains: ['https://yourdomain.com']
-  methods: ['GET', 'HEAD', 'OPTIONS'],
-  allowedHeaders: ['Range', 'If-Match', 'If-None-Match'],
+  origin: '*', // Allow all origins
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD', 'PATCH'],
+  allowedHeaders: ['Range', 'If-Match', 'If-None-Match', 'Content-Type', 'Authorization'],
   exposedHeaders: [
     'Content-Length',
     'Content-Range',
