@@ -30,6 +30,7 @@
     "express-fileupload": "^1.5.1",
     "express-session": "^1.18.1",
     "fount-js": "latest",
+    "instagram-private-api": "^1.46.1",
     "magic-gateway-js": "latest",
     "memorystore": "^1.6.7",
     "sessionless-node": "latest"

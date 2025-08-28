@@ -3,7 +3,7 @@ import sessionless from 'sessionless-node';
 
 const MAX_POSTS = 99; // This will be configurable eventually
 const POSTS_DIR = 'local-posts';
-const PROTOCOLS = ['at-protocol', POSTS_DIR];
+const PROTOCOLS = ['at-protocol', 'instagram', POSTS_DIR];
   
 const client = await createClient()
   .on('error', err => console.log('Client Error', err))
@@ -191,6 +191,22 @@ metaArray.map(console.log);
     const videosToReturn = Array.from(uniqueVideos).map(JSON.parse).sort((a, b) => +a.timestamp - +b.timestamp);
 
     return videosToReturn;
+  },
+
+  // Instagram credential management
+  saveInstagramCredentials: async (credentials) => {
+    await client.set('instagram:credentials', JSON.stringify(credentials));
+    return true;
+  },
+
+  getInstagramCredentials: async () => {
+    const credString = await client.get('instagram:credentials') || '{}';
+    return JSON.parse(credString);
+  },
+
+  deleteInstagramCredentials: async () => {
+    await client.del('instagram:credentials');
+    return true;
   }
 
 };

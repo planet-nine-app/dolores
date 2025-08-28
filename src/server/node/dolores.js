@@ -9,12 +9,14 @@ import store from 'memorystore';
 import { createHash } from 'node:crypto';
 import db from './src/persistence/db.js';
 import bsky from './src/protocols/at-protocol/bluesky.js';
+import instagram from './src/protocols/instagram/instagram.js';
 import fount from 'fount-js';
 import bdo from 'bdo-js';
 import sessionless from 'sessionless-node';
 import gateway from 'magic-gateway-js';
 
 bsky.refreshPosts().then(_ => console.log(bsky));
+instagram.refreshPosts().then(_ => console.log('📷 Instagram initialized:', instagram.getStats()));
 
 const MemoryStore = store(session);
 
@@ -276,11 +278,32 @@ console.log('auth failed');
 
 console.log('videos looks like', videos, {videos});
 
+    // Refresh protocols if needed (older than 10 minutes)
     if(+timestamp - bsky.lastRefresh > (10 * 60 * 1000)) {
       bsky.refreshPosts();
     }
+    if(+timestamp - instagram.lastRefresh > (10 * 60 * 1000)) {
+      instagram.refreshPosts();
+    }
 
-    res.send(bsky);
+    // Combine posts from all protocols
+    const combinedFeed = {
+      ...bsky,
+      instagram: {
+        videoPosts: instagram.getVideoPosts(),
+        picPosts: instagram.getPicPosts(),
+        genericPosts: instagram.getGenericPosts(),
+        allPosts: instagram.getAllPosts(),
+        stats: instagram.getStats()
+      },
+      // Combined all posts from all protocols
+      allProtocolPosts: [
+        ...bsky.allPosts,
+        ...instagram.getAllPosts()
+      ].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)) // Sort by timestamp, newest first
+    };
+
+    res.send(combinedFeed);
   } catch(err) {
 console.warn(err);
     res.status(404);
@@ -390,6 +413,101 @@ app.get('/post-widget-docs.html', (req, res) => {
   const docsHTML = fs.readFileSync(path.join(process.cwd(), 'dolores/public/post-widget-docs.html'), 'utf8');
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.send(docsHTML);
+});
+
+// Instagram credential management endpoints
+app.put('/admin/:uuid/instagram/credentials', async (req, res) => {
+  try {
+    const uuid = req.params.uuid;
+    const timestamp = req.body.timestamp;
+    const credentials = req.body.credentials; // {username, password}
+    const signature = req.body.signature;
+    const message = timestamp + uuid + (credentials.username || '');
+
+    const foundUser = await db.getUserByUUID(uuid);
+
+    // Only allow admin to set Instagram credentials
+    if(foundUser.pubKey !== process.env.ADMIN_PUB_KEY) {
+      res.status(403);
+      return res.send({error: 'admin access required'});
+    }
+
+    if(!signature || !sessionless.verifySignature(signature, message, foundUser.pubKey)) {
+      res.status(403);
+      return res.send({error: 'auth error'});
+    }
+
+    await db.saveInstagramCredentials(credentials);
+    console.log('📷 Instagram credentials updated');
+
+    res.send({success: true, message: 'Instagram credentials saved'});
+  } catch(err) {
+    console.warn('Instagram credentials error:', err);
+    res.status(500);
+    res.send({error: 'server error'});
+  }
+});
+
+app.delete('/admin/:uuid/instagram/credentials', async (req, res) => {
+  try {
+    const uuid = req.params.uuid;
+    const timestamp = req.body.timestamp;
+    const signature = req.body.signature;
+    const message = timestamp + uuid;
+
+    const foundUser = await db.getUserByUUID(uuid);
+
+    if(foundUser.pubKey !== process.env.ADMIN_PUB_KEY) {
+      res.status(403);
+      return res.send({error: 'admin access required'});
+    }
+
+    if(!signature || !sessionless.verifySignature(signature, message, foundUser.pubKey)) {
+      res.status(403);
+      return res.send({error: 'auth error'});
+    }
+
+    await db.deleteInstagramCredentials();
+    console.log('📷 Instagram credentials deleted');
+
+    res.send({success: true, message: 'Instagram credentials deleted'});
+  } catch(err) {
+    console.warn('Instagram credentials deletion error:', err);
+    res.status(500);
+    res.send({error: 'server error'});
+  }
+});
+
+// Instagram manual refresh endpoint
+app.post('/admin/:uuid/instagram/refresh', async (req, res) => {
+  try {
+    const uuid = req.params.uuid;
+    const timestamp = req.body.timestamp;
+    const signature = req.body.signature;
+    const message = timestamp + uuid;
+
+    const foundUser = await db.getUserByUUID(uuid);
+
+    if(foundUser.pubKey !== process.env.ADMIN_PUB_KEY) {
+      res.status(403);
+      return res.send({error: 'admin access required'});
+    }
+
+    if(!signature || !sessionless.verifySignature(signature, message, foundUser.pubKey)) {
+      res.status(403);
+      return res.send({error: 'auth error'});
+    }
+
+    await instagram.refreshPosts();
+    const stats = instagram.getStats();
+    console.log('📷 Instagram manually refreshed:', stats);
+
+    res.send({success: true, stats});
+  } catch(err) {
+    console.warn('Instagram refresh error:', err);
+    res.status(500);
+    res.send({error: 'server error'});
+  }
 });
 
 app.listen(process.env.PORT || 3005);
