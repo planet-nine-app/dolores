@@ -2,6 +2,7 @@
   "type": "module",
   "dependencies": {
     "chai": "^5.1.2",
+    "fount-js": "^0.2.2",
     "mocha": "^11.0.1",
     "sessionless-node": "^0.11.0",
     "superagent": "^10.1.1"
