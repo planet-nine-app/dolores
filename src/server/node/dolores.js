@@ -9,14 +9,14 @@ import store from 'memorystore';
 import { createHash } from 'node:crypto';
 import db from './src/persistence/db.js';
 import bsky from './src/protocols/at-protocol/bluesky.js';
-import instagram from './src/protocols/instagram/instagram.js';
+//import instagram from './src/protocols/instagram/instagram.js';
 import fount from 'fount-js';
 import bdo from 'bdo-js';
 import sessionless from 'sessionless-node';
 import gateway from 'magic-gateway-js';
 
 bsky.refreshPosts().then(_ => console.log(bsky));
-instagram.refreshPosts().then(_ => console.log('📷 Instagram initialized:', instagram.getStats()));
+//instagram.refreshPosts().then(_ => console.log('📷 Instagram initialized:', instagram.getStats()));
 
 const MemoryStore = store(session);
 
@@ -282,24 +282,24 @@ console.log('videos looks like', videos, {videos});
     if(+timestamp - bsky.lastRefresh > (10 * 60 * 1000)) {
       bsky.refreshPosts();
     }
-    if(+timestamp - instagram.lastRefresh > (10 * 60 * 1000)) {
+/*    if(+timestamp - instagram.lastRefresh > (10 * 60 * 1000)) {
       instagram.refreshPosts();
-    }
+    }*/
 
     // Combine posts from all protocols
     const combinedFeed = {
       ...bsky,
-      instagram: {
+      /*instagram: {
         videoPosts: instagram.getVideoPosts(),
         picPosts: instagram.getPicPosts(),
         genericPosts: instagram.getGenericPosts(),
         allPosts: instagram.getAllPosts(),
         stats: instagram.getStats()
-      },
+      },*/
       // Combined all posts from all protocols
       allProtocolPosts: [
         ...bsky.allPosts,
-        ...instagram.getAllPosts()
+//        ...instagram.getAllPosts()
       ].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)) // Sort by timestamp, newest first
     };
 
@@ -498,10 +498,10 @@ app.post('/admin/:uuid/instagram/refresh', async (req, res) => {
       return res.send({error: 'auth error'});
     }
 
-    await instagram.refreshPosts();
+/*    await instagram.refreshPosts();
     const stats = instagram.getStats();
     console.log('📷 Instagram manually refreshed:', stats);
-
+*/
     res.send({success: true, stats});
   } catch(err) {
     console.warn('Instagram refresh error:', err);
