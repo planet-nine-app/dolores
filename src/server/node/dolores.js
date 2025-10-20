@@ -17,7 +17,7 @@ import sessionless from 'sessionless-node';
 import gateway from 'magic-gateway-js';
 import MAGIC from './src/magic/magic.js';
 
-bsky.refreshPosts().then(_ => console.log(bsky));
+//bsky.refreshPosts().then(_ => console.log(bsky));
 canimus.refreshFeeds().then(_ => console.log(canimus));
 //instagram.refreshPosts().then(_ => console.log('📷 Instagram initialized:', instagram.getStats()));
 

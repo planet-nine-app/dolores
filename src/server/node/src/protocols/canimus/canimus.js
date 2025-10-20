@@ -13,7 +13,10 @@ const canimus = {
       fs.mkdirSync('./feeds');
     }
 
-    const promises = canimus.feedURLs.map($ => fetch($));
+    const promises = canimus.feedURLs.map(async $ => {
+      const resp = await fetch($);
+      return resp.json();
+    });
     canimus.feeds = await Promise.all(promises);
 
     //TODO: write feeds to fs
