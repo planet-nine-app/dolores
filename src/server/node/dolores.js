@@ -258,7 +258,7 @@ app.get('/user/:uuid/feed', async (req, res) => {
     const uuid = req.params.uuid;
     const timestamp = req.query.timestamp;
 console.log('beofre split', req.query.tags);
-    const tags = req.query.tags.split('+');
+    const tags = (req.query.tags && req.query.tags.length > 1) ? req.query.tags.split('+') : [];
     const protocol = req.query.protocol || 'bsky';
 console.log('after split', tags);
     const signature = req.query.signature;

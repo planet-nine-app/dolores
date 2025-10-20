@@ -3,7 +3,7 @@ should();
 import sessionless from 'sessionless-node';
 import superAgent from 'superagent';
 
-const baseURL = process.env.SUB_DOMAIN ? `https://${process.env.SUB_DOMAIN}.dolores.allyabase.com/` : 'http://127.0.0.1:3007/';
+const baseURL = process.env.SUB_DOMAIN ? `https://${process.env.SUB_DOMAIN}.dolores.allyabase.com/` : 'http://127.0.0.1:3005/';
 
 const get = async function(path) {
   console.info("Getting " + path);
@@ -44,20 +44,25 @@ describe('Canimus Protocol Tests', () => {
 
     const signature = await sessionless.sign(message);
 
-    const res = await get(`${baseURL}user/${savedUser.uuid}/feed?timestamp=${timestamp}&tags=${tags.join('+')}&protocol=${protocol}&signature=${signature}`);
+    try {
+      const res = await get(`${baseURL}user/${savedUser.uuid}/feed?timestamp=${timestamp}&tags=${tags.join('+')}&protocol=${protocol}&signature=${signature}`);
 
-    console.log('Canimus feed response:', res.body);
+      console.log('Canimus feed response:', res.body);
 
-    // Should have feeds property
-    res.body.should.have.property('feeds');
+      // Should have feeds property
+      res.body.should.have.property('feeds');
 
-    // Feeds should be an array
-    res.body.feeds.should.be.an('array');
+      // Feeds should be an array
+      res.body.feeds.should.be.an('array');
 
-    // Should have at least the test feed
-    res.body.feeds.length.should.be.at.least(1);
+      // Should have at least the test feed
+      res.body.feeds.length.should.be.at.least(1);
 
-    console.log(`✅ Successfully retrieved ${res.body.feeds.length} canimus feed(s)`);
+      console.log(`✅ Successfully retrieved ${res.body.feeds.length} canimus feed(s)`);
+    } catch (err) {
+      console.error('Error response:', err.response?.body || err.message);
+      throw err;
+    }
   });
 
   it('should verify canimus feed contains expected data', async () => {
