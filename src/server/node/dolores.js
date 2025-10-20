@@ -9,13 +9,16 @@ import store from 'memorystore';
 import { createHash } from 'node:crypto';
 import db from './src/persistence/db.js';
 import bsky from './src/protocols/at-protocol/bluesky.js';
+import canimus from './src/protocols/canimus/canimus.js';
 //import instagram from './src/protocols/instagram/instagram.js';
 import fount from 'fount-js';
 import bdo from 'bdo-js';
 import sessionless from 'sessionless-node';
 import gateway from 'magic-gateway-js';
+import MAGIC from './src/magic/magic.js';
 
 bsky.refreshPosts().then(_ => console.log(bsky));
+canimus.refreshFeeds().then(_ => console.log(canimus));
 //instagram.refreshPosts().then(_ => console.log('📷 Instagram initialized:', instagram.getStats()));
 
 const MemoryStore = store(session);
@@ -256,6 +259,7 @@ app.get('/user/:uuid/feed', async (req, res) => {
     const timestamp = req.query.timestamp;
 console.log('beofre split', req.query.tags);
     const tags = req.query.tags.split('+');
+    const protocol = req.params.protocol || 'bsky';
 console.log('after split', tags);
     const signature = req.query.signature;
     const message = timestamp + uuid + tags.join('');
@@ -266,6 +270,10 @@ console.log('after split', tags);
 console.log('auth failed');
       res.status(403);
       return res.send({error: 'auth error'});
+    }
+
+    if(protocol === 'canimus') {
+      return res.send({feeds: canimus.feeds});
     }
 
     let videos = [];
@@ -507,6 +515,26 @@ app.post('/admin/:uuid/instagram/refresh', async (req, res) => {
     console.warn('Instagram refresh error:', err);
     res.status(500);
     res.send({error: 'server error'});
+  }
+});
+
+app.post('/magic/spell/:spellName', async (req, res) => {
+  try {
+    const spellName = req.params.spellName;
+    console.log(`🪄 Received ${spellName} spell`);
+
+    if (!MAGIC[spellName]) {
+      res.status(404);
+      return res.send({ error: 'spell not found' });
+    }
+
+    const result = await MAGIC[spellName](req.body);
+    res.status(result.success ? 200 : 900);
+    res.send(result);
+  } catch (err) {
+    console.error('Magic spell error:', err);
+    res.status(404);
+    res.send({ success: false, error: err.message });
   }
 });
 
