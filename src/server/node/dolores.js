@@ -538,4 +538,4 @@ app.post('/magic/spell/:spellName', async (req, res) => {
   }
 });
 
-app.listen(process.env.PORT || 3005);
+app.listen(process.env.PORT || 3105);
