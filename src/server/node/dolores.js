@@ -423,6 +423,20 @@ app.get('/post-widget-docs.html', (req, res) => {
   res.send(docsHTML);
 });
 
+// Serve audio player HTML
+app.get('/audio-player.html', (req, res) => {
+  const audioHTML = fs.readFileSync(path.join(process.cwd(), 'dolores/public/audio-player.html'), 'utf8');
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.send(audioHTML);
+});
+
+// Serve audio player JavaScript
+app.get('/audio-player.js', (req, res) => {
+  const audioJS = fs.readFileSync(path.join(process.cwd(), 'dolores/public/audio-player.js'), 'utf8');
+  res.setHeader('Content-Type', 'application/javascript');
+  res.send(audioJS);
+});
+
 // Instagram credential management endpoints
 app.put('/admin/:uuid/instagram/credentials', async (req, res) => {
   try {
@@ -515,6 +529,18 @@ app.post('/admin/:uuid/instagram/refresh', async (req, res) => {
     console.warn('Instagram refresh error:', err);
     res.status(500);
     res.send({error: 'server error'});
+  }
+});
+
+// Public canimus feeds endpoint (no auth required)
+app.get('/canimus/feeds', async (req, res) => {
+  try {
+    // Return all canimus feeds
+    res.send({ feeds: canimus.feeds });
+  } catch (err) {
+    console.error('Canimus feeds error:', err);
+    res.status(500);
+    res.send({ error: 'server error' });
   }
 });
 
