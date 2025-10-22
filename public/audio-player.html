@@ -364,6 +364,55 @@
             40% { content: '..'; }
             60%, 100% { content: '...'; }
         }
+
+        /* Feed selector */
+        .feed-selector-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.5);
+            border-radius: 8px;
+        }
+
+        .feed-label {
+            font-size: 16px;
+            color: #8b5cf6;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .feed-selector {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid #10b981;
+            border-radius: 6px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.4));
+            min-width: 300px;
+        }
+
+        .feed-selector:hover {
+            background: rgba(16, 185, 129, 0.25);
+            border-color: #10b981;
+        }
+
+        .feed-selector:focus {
+            outline: none;
+            border-color: #ec4899;
+            filter: drop-shadow(0 0 12px rgba(236, 72, 153, 0.6));
+        }
+
+        .feed-selector option {
+            background: #1a0033;
+            color: #ffffff;
+        }
     </style>
 </head>
 <body>
@@ -376,9 +425,16 @@
 
     <div class="container">
         <header>
-            <h1>SOCKPUPPET</h1>
-            <div class="subtitle">PLANET NINE AUDIO PLAYER</div>
+            <h1>PLANET NINE</h1>
+            <div class="subtitle">AUDIO PLAYER</div>
         </header>
+
+        <div class="feed-selector-container">
+            <label for="feedSelector" class="feed-label">Select Feed:</label>
+            <select id="feedSelector" class="feed-selector">
+                <option value="">Loading feeds...</option>
+            </select>
+        </div>
 
         <div class="player-container">
             <div class="now-playing">

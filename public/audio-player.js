@@ -10,6 +10,8 @@
         : '/canimus/feeds';
 
     // State
+    let allFeeds = [];
+    let selectedFeedIndex = 0;
     let tracks = [];
     let currentTrackIndex = -1;
     let isPlaying = false;
@@ -33,26 +35,76 @@
     const purchaseBtn = document.getElementById('purchaseBtn');
     const purchaseIcon = document.getElementById('purchaseIcon');
     const purchaseLabel = document.getElementById('purchaseLabel');
+    const feedSelector = document.getElementById('feedSelector');
 
     // Initialize
     async function init() {
         try {
-            await loadTracks();
+            await loadFeeds();
+            setupFeedSelector();
             setupEventListeners();
+
+            // Load saved feed preference or default to first feed
+            const savedFeedIndex = localStorage.getItem('selectedFeedIndex');
+            if (savedFeedIndex !== null && parseInt(savedFeedIndex) < allFeeds.length) {
+                selectedFeedIndex = parseInt(savedFeedIndex);
+                feedSelector.value = selectedFeedIndex;
+            }
+
+            loadSelectedFeed();
         } catch (error) {
             console.error('Failed to initialize player:', error);
-            trackList.innerHTML = '<div class="loading">Failed to load tracks</div>';
+            trackList.innerHTML = '<div class="loading">Failed to load feeds</div>';
         }
     }
 
-    // Load tracks from JSON feed
-    async function loadTracks() {
+    // Load all feeds from server
+    async function loadFeeds() {
         const response = await fetch(FEED_URL);
         const data = await response.json();
+
+        // Store all feeds
+        allFeeds = data.feeds || [];
+    }
+
+    // Setup feed selector dropdown
+    function setupFeedSelector() {
+        feedSelector.innerHTML = '';
+
+        allFeeds.forEach((feed, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = feed.name || `Feed ${index + 1}`;
+            feedSelector.appendChild(option);
+        });
+
+        // Add change event listener
+        feedSelector.addEventListener('change', (e) => {
+            selectedFeedIndex = parseInt(e.target.value);
+            localStorage.setItem('selectedFeedIndex', selectedFeedIndex);
+
+            // Stop current playback
+            audioPlayer.pause();
+            isPlaying = false;
+            currentTrackIndex = -1;
+            updatePlayPauseButton();
+
+            // Load new feed
+            loadSelectedFeed();
+        });
+    }
+
+    // Load tracks from selected feed
+    function loadSelectedFeed() {
+        const feed = allFeeds[selectedFeedIndex];
+        if (!feed) return;
 
         // Parse the feed structure
         tracks = [];
         let trackNumber = 1;
+
+        // Clear track list
+        trackList.innerHTML = '';
 
         function parseChildren(children, albumName = null, albumCover = null) {
             children.forEach(item => {
@@ -100,17 +152,9 @@
             });
         }
 
-        // Handle dolores response structure: {feeds: [...]}
-        if (data.feeds && Array.isArray(data.feeds)) {
-            // Process each feed
-            data.feeds.forEach(feed => {
-                if (feed.children) {
-                    parseChildren(feed.children);
-                }
-            });
-        } else if (data.children) {
-            // Fallback for direct feed format
-            parseChildren(data.children);
+        // Parse the selected feed's children
+        if (feed.children) {
+            parseChildren(feed.children);
         }
 
         renderTrackList();
