@@ -111,7 +111,12 @@
             children.forEach(item => {
                 if (item.type === 'track') {
                     // Support both media array (Sockpuppet) and direct url (Bury the Needle)
-                    const audioSrc = item.media?.find(m => m.type === 'audio/mp3')?.src || item.url;
+                    // Support multiple audio formats: mp3, m4a, mpeg
+                    const audioSrc = item.media?.find(m =>
+                        m.type === 'audio/mp3' ||
+                        m.type === 'audio/m4a' ||
+                        m.type === 'audio/mpeg'
+                    )?.src || item.url;
                     if (audioSrc) {
                         // Find purchase link
                         const purchaseLink = item.links?.find(link => link.rel === 'purchase');

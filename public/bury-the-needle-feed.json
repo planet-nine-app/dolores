@@ -50,7 +50,13 @@
               "name": "PBR",
               "artist": "Bury the Needle",
               "duration": 77,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle#track-1"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle#track-1",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Thinks%20You%27re%20Lookin%27%20Pretty%20Good/01%20PBR.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -58,7 +64,13 @@
               "name": "Let's Go Surfin' Now",
               "artist": "Bury the Needle",
               "duration": 74,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle#track-2"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle#track-2",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Thinks%20You%27re%20Lookin%27%20Pretty%20Good/02%20Let%27s%20Go%20Surfin%27%20Now.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -66,7 +78,13 @@
               "name": "Pedal To the Metal",
               "artist": "Bury the Needle",
               "duration": 72,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle#track-3"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle#track-3",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Thinks%20You%27re%20Lookin%27%20Pretty%20Good/03%20Pedal%20To%20the%20Metal.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -74,7 +92,13 @@
               "name": "Oldstyle",
               "artist": "Bury the Needle",
               "duration": 73,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle#track-4"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle#track-4",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Thinks%20You%27re%20Lookin%27%20Pretty%20Good/04%20Oldstyle.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -82,7 +106,13 @@
               "name": "Whisperin' Sweet Nothin's",
               "artist": "Bury the Needle",
               "duration": 96,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle#track-5"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle#track-5",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Thinks%20You%27re%20Lookin%27%20Pretty%20Good/05%20Whisperin%27%20Sweet%20Nothin%27s.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -90,7 +120,13 @@
               "name": "Got To Got To Got To Have It",
               "artist": "Bury the Needle",
               "duration": 94,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle#track-6"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle#track-6",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Thinks%20You%27re%20Lookin%27%20Pretty%20Good/06%20Got%20To%20Got%20To%20Got%20To%20Have%20It.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -98,7 +134,13 @@
               "name": "All Night Long",
               "artist": "Bury the Needle",
               "duration": 70,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle#track-7"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle#track-7",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Thinks%20You%27re%20Lookin%27%20Pretty%20Good/07%20All%20Night%20Long.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -106,7 +148,13 @@
               "name": "Bury the Needle Thinks You're Lookin' Pretty Good",
               "artist": "Bury the Needle",
               "duration": 138,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle#track-8"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle#track-8",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Thinks%20You%27re%20Lookin%27%20Pretty%20Good/08%20Bury%20the%20Needle%20Thinks%20You%27re%20Lookin%27%20Pretty%20Good.m4a"
+                }
+              ]
             }
           ]
         },
@@ -130,7 +178,13 @@
               "name": "Take It Past the Limit",
               "artist": "Bury the Needle",
               "duration": 58,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-deliciously-sauced#track-1"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-deliciously-sauced#track-1",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Gets%20Deliciously%20Sauced/01%20Take%20It%20Past%20the%20Limit.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -138,7 +192,13 @@
               "name": "Where's My Beer?",
               "artist": "Bury the Needle",
               "duration": 87,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-deliciously-sauced#track-2"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-deliciously-sauced#track-2",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Gets%20Deliciously%20Sauced/02%20Where%27s%20My%20Beer_.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -146,7 +206,13 @@
               "name": "Booze Blanket Party",
               "artist": "Bury the Needle",
               "duration": 108,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-deliciously-sauced#track-3"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-deliciously-sauced#track-3",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Gets%20Deliciously%20Sauced/03%20Booze%20Blanket%20Party.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -154,7 +220,13 @@
               "name": "The Cheaper the Woman, the Classier the Beer",
               "artist": "Bury the Needle",
               "duration": 75,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-deliciously-sauced#track-4"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-deliciously-sauced#track-4",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Gets%20Deliciously%20Sauced/04%20The%20Cheaper%20the%20Woman%2C%20the%20Classier%20the%20Beer.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -162,7 +234,13 @@
               "name": "Dunk Tunk",
               "artist": "Bury the Needle",
               "duration": 68,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-deliciously-sauced#track-5"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-deliciously-sauced#track-5",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Gets%20Deliciously%20Sauced/05%20Dunk%20Tunk.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -170,7 +248,13 @@
               "name": "Smoke 'em If You Got 'em, But We're Fine Drunk",
               "artist": "Bury the Needle",
               "duration": 73,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-deliciously-sauced#track-6"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-deliciously-sauced#track-6",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Gets%20Deliciously%20Sauced/06%20Smoke%20%27em%20If%20You%20Got%20%27em%2C%20But%20We%27re%20Fine%20Drunk.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -178,7 +262,13 @@
               "name": "Lady Whiskey Blues",
               "artist": "Bury the Needle",
               "duration": 94,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-deliciously-sauced#track-7"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-deliciously-sauced#track-7",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Gets%20Deliciously%20Sauced/07%20Lady%20Whiskey%20Blues.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -186,7 +276,13 @@
               "name": "The Lady's My Ante",
               "artist": "Bury the Needle",
               "duration": 80,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-deliciously-sauced#track-8"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-deliciously-sauced#track-8",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Gets%20Deliciously%20Sauced/08%20The%20Lady%27s%20My%20Ante.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -194,7 +290,13 @@
               "name": "I'll See Your Beer and I'll Raise You 15",
               "artist": "Bury the Needle",
               "duration": 112,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-deliciously-sauced#track-9"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-deliciously-sauced#track-9",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Gets%20Deliciously%20Sauced/09%20I%27ll%20See%20Your%20Beer%20and%20I%27ll%20Raise%20You%2015.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -202,7 +304,13 @@
               "name": "Always Drunk",
               "artist": "Bury the Needle",
               "duration": 246,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-deliciously-sauced#track-10"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-deliciously-sauced#track-10",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Gets%20Deliciously%20Sauced/10%20Always%20Drunk.m4a"
+                }
+              ]
             }
           ]
         },
@@ -226,7 +334,13 @@
               "name": "Muscle Car",
               "artist": "Bury the Needle",
               "duration": 57,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-their-swerve-on#track-1"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-their-swerve-on#track-1",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Gets%20Their%20Swerve%20On/01%20Muscle%20Car.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -234,7 +348,13 @@
               "name": "I Still Can See",
               "artist": "Bury the Needle",
               "duration": 141,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-their-swerve-on#track-2"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-their-swerve-on#track-2",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Gets%20Their%20Swerve%20On/02%20I%20Still%20Can%20See.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -242,7 +362,13 @@
               "name": "Well Whiskey",
               "artist": "Bury the Needle",
               "duration": 113,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-their-swerve-on#track-3"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-their-swerve-on#track-3",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Gets%20Their%20Swerve%20On/03%20Well%20Whiskey.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -250,7 +376,13 @@
               "name": "Ace in the Hole",
               "artist": "Bury the Needle",
               "duration": 132,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-their-swerve-on#track-4"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-their-swerve-on#track-4",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Gets%20Their%20Swerve%20On/04%20Ace%20in%20the%20Hole.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -258,7 +390,13 @@
               "name": "Rock N' Roll In My Pants",
               "artist": "Bury the Needle",
               "duration": 85,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-their-swerve-on#track-5"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-their-swerve-on#track-5",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Gets%20Their%20Swerve%20On/05%20Rock%20N%27%20Roll%20In%20My%20Pants.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -266,7 +404,13 @@
               "name": "Gimme Some of That Good Lovin'",
               "artist": "Bury the Needle",
               "duration": 64,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-their-swerve-on#track-6"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-their-swerve-on#track-6",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Gets%20Their%20Swerve%20On/06%20Gimme%20Some%20of%20That%20Good%20Lovin%27.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -274,7 +418,13 @@
               "name": "Backpack Full of Beer",
               "artist": "Bury the Needle",
               "duration": 109,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-their-swerve-on#track-7"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-their-swerve-on#track-7",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Gets%20Their%20Swerve%20On/07%20Backpack%20Full%20of%20Beer.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -282,7 +432,13 @@
               "name": "This Place Is Dead",
               "artist": "Bury the Needle",
               "duration": 117,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-their-swerve-on#track-8"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-their-swerve-on#track-8",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Gets%20Their%20Swerve%20On/08%20This%20Place%20Is%20Dead.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -290,7 +446,13 @@
               "name": "Throw It All In",
               "artist": "Bury the Needle",
               "duration": 115,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-their-swerve-on#track-9"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-their-swerve-on#track-9",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Gets%20Their%20Swerve%20On/09%20Throw%20It%20All%20In.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -298,7 +460,13 @@
               "name": "Accelerate",
               "artist": "Bury the Needle",
               "duration": 108,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-their-swerve-on#track-10"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-their-swerve-on#track-10",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Gets%20Their%20Swerve%20On/10%20Accelerate.m4a"
+                }
+              ]
             },
             {
               "type": "track",
@@ -306,7 +474,13 @@
               "name": "The Land o' Whiskey",
               "artist": "Bury the Needle",
               "duration": 118,
-              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-their-swerve-on#track-11"
+              "url": "https://mirlo.space/bury-the-needle/release/bury-the-needle-gets-their-swerve-on#track-11",
+              "media": [
+                {
+                  "type": "audio/m4a",
+                  "src": "/Bury%20the%20Needle%20Gets%20Their%20Swerve%20On/11%20The%20Land%20o%27%20Whiskey.m4a"
+                }
+              ]
             }
           ]
         }
