@@ -30,7 +30,14 @@ const canimus = {
       } else {
         // Fetch remote feed
         const resp = await fetch(feedConfig.url);
-        return resp.json();
+        const feed = await resp.json();
+
+        // Add name if missing
+        if (!feed.name && feed.children?.[0]?.name) {
+          feed.name = `${feed.children[0].name} - Music Feed`;
+        }
+
+        return feed;
       }
     });
     canimus.feeds = await Promise.all(promises);

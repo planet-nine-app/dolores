@@ -4,10 +4,8 @@
 (function() {
     'use strict';
 
-    // Detect environment and set feed URL accordingly
-    const FEED_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://127.0.0.1:3105/canimus/feeds'
-        : '/canimus/feeds';
+    // Use relative path for feeds endpoint
+    const FEED_URL = '/canimus/feeds';
 
     // State
     let allFeeds = [];
@@ -99,6 +97,9 @@
         const feed = allFeeds[selectedFeedIndex];
         if (!feed) return;
 
+        console.log('Loading feed:', feed.name);
+        console.log('Feed has children:', feed.children?.length);
+
         // Parse the feed structure
         tracks = [];
         let trackNumber = 1;
@@ -109,7 +110,8 @@
         function parseChildren(children, albumName = null, albumCover = null) {
             children.forEach(item => {
                 if (item.type === 'track') {
-                    const audioSrc = item.media?.find(m => m.type === 'audio/mp3')?.src;
+                    // Support both media array (Sockpuppet) and direct url (Bury the Needle)
+                    const audioSrc = item.media?.find(m => m.type === 'audio/mp3')?.src || item.url;
                     if (audioSrc) {
                         // Find purchase link
                         const purchaseLink = item.links?.find(link => link.rel === 'purchase');
@@ -117,9 +119,9 @@
                         tracks.push({
                             number: trackNumber++,
                             title: item.name,
-                            artist: item.Artist || 'Sockpuppet',
+                            artist: item.artist || item.Artist || 'Unknown Artist',
                             album: albumName || 'Single',
-                            duration: item.Duration || 0,
+                            duration: item.duration || item.Duration || 0,
                             src: audioSrc,
                             cover: item.images?.cover?.src || albumCover || '',
                             description: stripHtml(item.description || ''),
@@ -130,7 +132,8 @@
 
                 if (item.type === 'album') {
                     const albumName = item.name;
-                    const albumCover = item.images?.cover?.src || '';
+                    // Support both images.cover.src (Sockpuppet) and images[0].src (Bury the Needle)
+                    const albumCover = item.images?.cover?.src || item.images?.[0]?.src || '';
 
                     // Add album header
                     const albumHeader = document.createElement('div');
@@ -157,6 +160,7 @@
             parseChildren(feed.children);
         }
 
+        console.log('Parsed tracks:', tracks.length);
         renderTrackList();
     }
 

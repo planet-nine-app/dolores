@@ -405,34 +405,34 @@ console.warn(err);
 
 // Serve form widget JavaScript
 app.get('/post-widget.js', (req, res) => {
-  const widgetCode = fs.readFileSync(path.join(process.cwd(), 'dolores/public/post-widget.js'), 'utf8');
+  const widgetCode = fs.readFileSync(path.join(import.meta.dirname, '../../../public/post-widget.js'), 'utf8');
   res.setHeader('Content-Type', 'application/javascript');
   res.send(widgetCode);
 });
 
 // Serve form widget CSS
 app.get('/post-widget.css', (req, res) => {
-  const widgetCSS = fs.readFileSync(path.join(process.cwd(), 'dolores/public/post-widget.css'), 'utf8');
+  const widgetCSS = fs.readFileSync(path.join(import.meta.dirname, '../../../public/post-widget.css'), 'utf8');
   res.setHeader('Content-Type', 'text/css');
   res.send(widgetCSS);
 });
 
 app.get('/post-widget-docs.html', (req, res) => {
-  const docsHTML = fs.readFileSync(path.join(process.cwd(), 'dolores/public/post-widget-docs.html'), 'utf8');
+  const docsHTML = fs.readFileSync(path.join(import.meta.dirname, '../../../public/post-widget-docs.html'), 'utf8');
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.send(docsHTML);
 });
 
 // Serve audio player HTML
 app.get('/audio-player.html', (req, res) => {
-  const audioHTML = fs.readFileSync(path.join(process.cwd(), 'dolores/public/audio-player.html'), 'utf8');
+  const audioHTML = fs.readFileSync(path.join(import.meta.dirname, '../../../public/audio-player.html'), 'utf8');
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.send(audioHTML);
 });
 
 // Serve audio player JavaScript
 app.get('/audio-player.js', (req, res) => {
-  const audioJS = fs.readFileSync(path.join(process.cwd(), 'dolores/public/audio-player.js'), 'utf8');
+  const audioJS = fs.readFileSync(path.join(import.meta.dirname, '../../../public/audio-player.js'), 'utf8');
   res.setHeader('Content-Type', 'application/javascript');
   res.send(audioJS);
 });
