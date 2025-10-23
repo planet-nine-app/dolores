@@ -38,18 +38,30 @@
     // Initialize
     async function init() {
         try {
-            await loadFeeds();
-            setupFeedSelector();
-            setupEventListeners();
+            // Check for feedUrl query parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const feedUrl = urlParams.get('feedUrl');
 
-            // Load saved feed preference or default to first feed
-            const savedFeedIndex = localStorage.getItem('selectedFeedIndex');
-            if (savedFeedIndex !== null && parseInt(savedFeedIndex) < allFeeds.length) {
-                selectedFeedIndex = parseInt(savedFeedIndex);
-                feedSelector.value = selectedFeedIndex;
+            if (feedUrl) {
+                // Direct feed loading - hide feed selector
+                feedSelector.style.display = 'none';
+                await loadDirectFeed(feedUrl);
+                setupEventListeners();
+            } else {
+                // Normal behavior - load all feeds and show selector
+                await loadFeeds();
+                setupFeedSelector();
+                setupEventListeners();
+
+                // Load saved feed preference or default to first feed
+                const savedFeedIndex = localStorage.getItem('selectedFeedIndex');
+                if (savedFeedIndex !== null && parseInt(savedFeedIndex) < allFeeds.length) {
+                    selectedFeedIndex = parseInt(savedFeedIndex);
+                    feedSelector.value = selectedFeedIndex;
+                }
+
+                loadSelectedFeed();
             }
-
-            loadSelectedFeed();
         } catch (error) {
             console.error('Failed to initialize player:', error);
             trackList.innerHTML = '<div class="loading">Failed to load feeds</div>';
@@ -63,6 +75,25 @@
 
         // Store all feeds
         allFeeds = data.feeds || [];
+    }
+
+    // Load a direct feed URL
+    async function loadDirectFeed(url) {
+        try {
+            console.log('🎵 Loading direct feed:', url);
+            const response = await fetch(url);
+            const feed = await response.json();
+
+            // Store as single feed
+            allFeeds = [feed];
+            selectedFeedIndex = 0;
+
+            loadSelectedFeed();
+            console.log('✅ Direct feed loaded successfully');
+        } catch (error) {
+            console.error('❌ Failed to load direct feed:', error);
+            trackList.innerHTML = '<div class="loading">Failed to load feed from URL</div>';
+        }
     }
 
     // Setup feed selector dropdown
