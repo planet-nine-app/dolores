@@ -82,25 +82,22 @@
         try {
             console.log('🎵 Loading direct feed:', url);
 
-            let feed;
-
             // Check if feed was pre-loaded by server (avoids CORS issues)
             if (window.PRELOADED_FEED && window.PRELOADED_FEED_URL === url) {
                 console.log('🎵 Using pre-loaded feed from server');
-                feed = window.PRELOADED_FEED;
+                const feed = window.PRELOADED_FEED;
+
+                // Store as single feed
+                allFeeds = [feed];
+                selectedFeedIndex = 0;
+
+                loadSelectedFeed();
+                console.log('✅ Direct feed loaded successfully');
             } else {
-                // Fall back to client-side fetch
-                console.log('🎵 Fetching feed client-side');
-                const response = await fetch(url);
-                feed = await response.json();
+                // Server must pre-load feed to avoid CORS
+                console.error('❌ Feed was not pre-loaded by server. Cannot fetch client-side due to CORS.');
+                trackList.innerHTML = '<div class="loading">Feed could not be loaded. Server error.</div>';
             }
-
-            // Store as single feed
-            allFeeds = [feed];
-            selectedFeedIndex = 0;
-
-            loadSelectedFeed();
-            console.log('✅ Direct feed loaded successfully');
         } catch (error) {
             console.error('❌ Failed to load direct feed:', error);
             trackList.innerHTML = '<div class="loading">Failed to load feed from URL</div>';
