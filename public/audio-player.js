@@ -81,8 +81,19 @@
     async function loadDirectFeed(url) {
         try {
             console.log('🎵 Loading direct feed:', url);
-            const response = await fetch(url);
-            const feed = await response.json();
+
+            let feed;
+
+            // Check if feed was pre-loaded by server (avoids CORS issues)
+            if (window.PRELOADED_FEED && window.PRELOADED_FEED_URL === url) {
+                console.log('🎵 Using pre-loaded feed from server');
+                feed = window.PRELOADED_FEED;
+            } else {
+                // Fall back to client-side fetch
+                console.log('🎵 Fetching feed client-side');
+                const response = await fetch(url);
+                feed = await response.json();
+            }
 
             // Store as single feed
             allFeeds = [feed];

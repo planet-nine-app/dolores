@@ -427,11 +427,49 @@ app.get('/post-widget-docs.html', (req, res) => {
   res.send(docsHTML);
 });
 
-// Serve audio player HTML
-app.get('/audio-player.html', (req, res) => {
-  const audioHTML = fs.readFileSync(path.join(import.meta.dirname, '../../../public/audio-player.html'), 'utf8');
-  res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.send(audioHTML);
+// Serve audio player HTML with optional pre-loaded feed
+app.get('/audio-player.html', async (req, res) => {
+  try {
+    let audioHTML = fs.readFileSync(path.join(import.meta.dirname, '../../../public/audio-player.html'), 'utf8');
+
+    // Check if feedUrl query parameter is provided
+    const feedUrl = req.query.feedUrl;
+
+    if (feedUrl) {
+      console.log('🎵 Fetching feed server-side:', feedUrl);
+
+      try {
+        // Fetch the feed server-side to avoid CORS issues
+        const feedResponse = await fetch(feedUrl);
+        const feedData = await feedResponse.json();
+
+        console.log('✅ Feed fetched successfully');
+
+        // Inject the feed data into the HTML
+        const feedScript = `
+    <script>
+      // Pre-loaded feed data (injected server-side)
+      window.PRELOADED_FEED = ${JSON.stringify(feedData)};
+      window.PRELOADED_FEED_URL = ${JSON.stringify(feedUrl)};
+      console.log('🎵 Feed pre-loaded from server:', window.PRELOADED_FEED_URL);
+    </script>`;
+
+        // Insert the script before the closing </head> tag
+        audioHTML = audioHTML.replace('</head>', `${feedScript}\n  </head>`);
+
+      } catch (fetchError) {
+        console.error('❌ Failed to fetch feed:', feedError.message);
+        // Continue without pre-loaded feed - will fall back to client-side fetch
+      }
+    }
+
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.send(audioHTML);
+  } catch (err) {
+    console.error('Audio player error:', err);
+    res.status(500);
+    res.send({ error: 'server error' });
+  }
 });
 
 // Serve audio player JavaScript
