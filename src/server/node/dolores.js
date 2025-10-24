@@ -46,10 +46,6 @@ app.options('*', (req, res) => {
   res.status(204).send();
 });
 
-// Serve static files from public directory (audio files, etc.)
-const publicPath = path.join(import.meta.dirname, '../../../public');
-app.use(express.static(publicPath));
-
 const SUBDOMAIN = process.env.SUBDOMAIN || 'dev';
 fount.baseURL = process.env.LOCALHOST ? 'http://localhost:3006/' : `https://${SUBDOMAIN}.fount.allyabase.com/`;
 bdo.baseURL = process.env.LOCALHOST ? 'http://localhost:3003/' : `https://${SUBDOMAIN}.bdo.allyabase.com/`;
@@ -605,5 +601,11 @@ app.post('/magic/spell/:spellName', async (req, res) => {
     res.send({ success: false, error: err.message });
   }
 });
+
+// Serve static files from public directory (audio files, etc.)
+const publicPath = path.join(import.meta.dirname, '../../../public');
+app.use(express.static(publicPath));
+
+
 
 app.listen(process.env.PORT || 3007);
